@@ -2,13 +2,12 @@
 fos_rest:
     routing_loader:
         default_format: json
+        include_format: false
+    param_fetcher_listener:  true
     view:
-        view_response_listener:  'force'
-#    param_fetcher_listener:  true
-#    allowed_methods_listener:  true
-#    routing_loader: true
-#    view:
-#        view_response_listener:  true
+        view_response_listener:  true
+    body_converter:
+        enabled: true
 #    exception:
 #        codes:
 #            App\Exception\MyException: 403

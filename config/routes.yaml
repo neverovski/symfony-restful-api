@@ -1,3 +1,14 @@
 #index:
 #    path: /
 #    controller: App\Controller\DefaultController::index
+
+movies:
+    type: rest
+    resource: App\Controller\MoviesController
+
+movies_post:
+    path: /movies
+    methods: [POST]
+    defaults:
+        _controller: App\Controller\MoviesController:postMoviesAction
+        _format: json
