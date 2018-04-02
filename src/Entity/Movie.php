@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\MovieRepository")
@@ -18,21 +19,28 @@ class Movie
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank()
+     * @Assert\Length(max=255)
      */
     private $title;
 
     /**
      * @ORM\Column(type="smallint")
+     * @Assert\NotBlank()
+     * @Assert\Range(min=1888, max=2025)
      */
     private $year;
 
     /**
      * @ORM\Column(type="smallint")
+     * @Assert\NotBlank()
+     * @Assert\Range(min=1, max=300)
      */
     private $time;
 
     /**
      * @ORM\Column(type="text", nullable=true)
+     * @Assert\NotBlank()
      */
     private $description;
 

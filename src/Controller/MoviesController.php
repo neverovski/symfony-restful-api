@@ -7,6 +7,9 @@ use FOS\RestBundle\Controller\ControllerTrait;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Validator\ConstraintViolationListInterface;
+use Symfony\Component\HttpKernel\Exception\HttpException;
+use App\Exception\ValidationException;
 
 class MoviesController extends AbstractController
 {
@@ -26,8 +29,11 @@ class MoviesController extends AbstractController
      * @ParamConverter("movie", converter="fos_rest.request_body")
      * @Rest\NoRoute()
      */
-    public function postMoviesAction(Movie $movie)
+    public function postMoviesAction(Movie $movie, ConstraintViolationListInterface $validationErrors)
     {
+        if (count($validationErrors) > 0) {
+            throw new ValidationException($validationErrors);
+        }
         $manager = $this->getDoctrine()->getManager();
 
         $manager->persist($movie);
@@ -41,7 +47,7 @@ class MoviesController extends AbstractController
      */ 
     public function deleteMovieAction(?Movie $movie) 
     {
-        if(null === $movie) {
+        if (null === $movie) {
             return $this->view(null, 404);
         }
 
@@ -55,7 +61,7 @@ class MoviesController extends AbstractController
      */
     public function getMovieAction(?Movie $movie)
     {
-        if(null === $movie) {
+        if (null === $movie) {
             return $this->view(null, 404);
         }
 
