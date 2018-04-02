@@ -12,3 +12,21 @@ movies_post:
     defaults:
         _controller: App\Controller\MoviesController:postMoviesAction
         _format: json
+
+humans:
+    type: rest
+    resource: App\Controller\HumansController
+
+humans_post:
+    path: /humans
+    methods: [POST]
+    defaults:
+        _controller: App\Controller\HumansController:postHumansAction
+        _format: json
+
+movies_roles_post:
+    path: /movies/{movie}/roles
+    methods: [POST]
+    defaults:
+        _controller: App\Controller\MoviesController:postMovieRolesAction
+        _format: json
