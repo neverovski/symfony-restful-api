@@ -9,7 +9,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
-use Symfony\Component\HttpKernel\Exception\HttpException;
 use App\Exception\ValidationException;
 
 class MoviesController extends AbstractController
@@ -89,7 +88,7 @@ class MoviesController extends AbstractController
 
         $manager->persist($role);
 
-        $movie->getRole()->add($role);
+        $movie->getRoles()->add($role);
         $manager->persist($movie);
         $manager->flush();
 

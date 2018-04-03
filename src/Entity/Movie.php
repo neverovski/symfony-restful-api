@@ -57,16 +57,26 @@ class Movie
         $this->roles = new ArrayCollection();
     }
 
+    /**
+     * @return int $id
+     */
     public function getId()
     {
         return $this->id;
     }
 
+    /**
+     * @return null|string
+     */
     public function getTitle(): ?string
     {
         return $this->title;
     }
 
+    /**
+     * @param string $title
+     * @return Movie
+     */
     public function setTitle(string $title): self
     {
         $this->title = $title;
@@ -74,11 +84,18 @@ class Movie
         return $this;
     }
 
+    /**
+     * @return int|null
+     */
     public function getYear(): ?int
     {
         return $this->year;
     }
 
+    /**
+     * @param int $year
+     * @return Movie
+     */
     public function setYear(int $year): self
     {
         $this->year = $year;
@@ -86,11 +103,18 @@ class Movie
         return $this;
     }
 
+    /**
+     * @return int|null
+     */
     public function getTime(): ?int
     {
         return $this->time;
     }
 
+    /**
+     * @param int $time
+     * @return Movie
+     */
     public function setTime(int $time): self
     {
         $this->time = $time;
@@ -98,11 +122,18 @@ class Movie
         return $this;
     }
 
+    /**
+     * @return null|string
+     */
     public function getDescription(): ?string
     {
         return $this->description;
     }
 
+    /**
+     * @param null|string $description
+     * @return Movie
+     */
     public function setDescription(?string $description): self
     {
         $this->description = $description;

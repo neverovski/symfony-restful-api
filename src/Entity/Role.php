@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use JMS\Serializer\Annotation as Serializer;
+use App\Annotation as App;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\RoleRepository")
@@ -20,6 +22,7 @@ class Role
     /**
      * @var Person
      * @ORM\ManyToOne(targetEntity="Person")
+     * @App\DeserializeEntity(type="App\Entity\Person", idField="id", idGetter="getId", setter="setPerson")
      */
     private $person;
 
@@ -64,7 +67,7 @@ class Role
     /**
      * @return string
      */
-    public function getlayedName(): string 
+    public function getPlayedName(): string
     {
         return $this->playedName;
     }
@@ -72,7 +75,7 @@ class Role
     /**
      * @param string $playedName
      */
-    public function setlayedName(string $playedName) 
+    public function setPlayedName(string $playedName)
     {
         $this->playedName = $playedName;
     }    
@@ -88,7 +91,7 @@ class Role
     /**
      * @param Movie $movie
      */
-    public function setMovien(Movie $movie) 
+    public function setMovie(Movie $movie)
     {
         $this->movie = $movie;
     }
