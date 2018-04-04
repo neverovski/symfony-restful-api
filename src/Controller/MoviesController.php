@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\EntityMerger;
 use App\Entity\Movie;
 use App\Entity\Role;
 use FOS\RestBundle\Controller\ControllerTrait;
@@ -15,6 +16,18 @@ class MoviesController extends AbstractController
 {
     use ControllerTrait;
 
+    /**
+     * @var EntityMerger
+     */
+    private $entityMerger;
+
+    /**
+     * @param EntityMerger $entityMerge
+     */
+    public function __construct(EntityMerger $entityMerger)
+    {
+        $this->entityMerger = $entityMerger;
+    }
     /**
      * @Rest\View()
      */
@@ -97,5 +110,31 @@ class MoviesController extends AbstractController
         $manager->flush();
 
         return $role;
+    }
+
+    /**
+     * @Rest\View(statusCode=201)
+     * @ParamConverter("movie", converter="fos_rest.request_body", 
+     *     options={"validator" = {"groups" = {"Patch"}}}
+     * )
+     * @Rest\NoRoute()
+     */
+    public function patchMovieAction(?Movie $movie, Movie $modifiedMovie, ConstraintViolationListInterface $validationErrors)
+    {
+        if (null === $movie) {
+            return $this->view(null, 404);
+        }
+
+        if (count($validationErrors) > 0) {
+            throw new ValidationException($validationErrors);
+        }
+
+        $this->entityMerger->merge($movie, $modifiedMovie);
+
+        $manager = $this->getDoctrine()->getManager();
+        $manager->persist($movie);
+        $manager->flush();
+
+        return $movie;
     }
 }

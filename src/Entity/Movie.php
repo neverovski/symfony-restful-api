@@ -32,28 +32,28 @@ class Movie
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Assert\NotBlank()
+     * @Assert\NotBlank(groups={"Default"})
      * @Assert\Length(max=255)
      */
     private $title;
 
     /**
      * @ORM\Column(type="smallint")
-     * @Assert\NotBlank()
-     * @Assert\Range(min=1888, max=2025)
+     * @Assert\NotBlank(groups={"Default"})
+     * @Assert\Range(min=1888, max=2025, groups={"Default", "Patch"})
      */
     private $year;
 
     /**
      * @ORM\Column(type="smallint")
-     * @Assert\NotBlank()
-     * @Assert\Range(min=1, max=300)
+     * @Assert\NotBlank(groups={"Default"})
+     * @Assert\Range(min=1, max=300, groups={"Default", "Patch"})
      */
     private $time;
 
     /**
      * @ORM\Column(type="text", nullable=true)
-     * @Assert\NotBlank()
+     * @Assert\NotBlank(groups={"Default"})
      */
     private $description;
 
