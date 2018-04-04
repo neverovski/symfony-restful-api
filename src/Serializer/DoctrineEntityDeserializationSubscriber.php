@@ -2,21 +2,30 @@
 
 namespace App\Serializer;
 
-use Doctrine\Common\Annotations\AnnotationReader;
+use App\Annotation\DeserializeEntity;
+use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\Common\Annotations\Reader;
 use JMS\Serializer\EventDispatcher\EventSubscriberInterface;
 use JMS\Serializer\EventDispatcher\ObjectEvent;
 use JMS\Serializer\EventDispatcher\PreDeserializeEvent;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class DoctrineEntityDeserializationSubscriber implements EventSubscriberInterface
 {
     /**
-     * @var AnnotationReader
+     * @var Reader
      */
-    public $annotationReader;
+    private $reader;
 
-    public function __construct(AnnotationReader $annotationReader)
+    /**
+     * @var ManagerRegistry
+     */
+    private $doctrineRegistry;
+
+    public function __construct(Reader $reader, ManagerRegistry $doctrineRegistry)
     {
-        $this->annotationReader = $annotationReader;
+        $this->reader = $reader;
+        $this->doctrineRegistry = $doctrineRegistry;
     }
 
     public static function getSubscribedEvents()
@@ -49,25 +58,65 @@ class DoctrineEntityDeserializationSubscriber implements EventSubscriberInterfac
                 continue;
             }
 
-            $annotation = $this->annotationReader->getPropertyAnnotation(
+            $annotation = $this->reader->getPropertyAnnotation(
                 $property,
                 DeserializeEntity::class
             );
-
             if (null === $annotation || !class_exists($annotation->type)) {
                 continue;
             }
             
             $data[$property->name] = [
-                $annotation->idFiled => $data[$property->name]
+                $annotation->idField => $data[$property->name]
             ];
         }
-
         $event->setData($data);
     }
 
     public function onPostDeserialize(ObjectEvent $event)
     {
+        $deserializeType = $event->getType()['name'];
 
+        if(!class_exists($deserializeType)) {
+            return;
+        }
+        $object = $event->getObject();
+        $reflection = new \ReflectionObject($object);
+
+        foreach ($reflection->getProperties() as $property) {
+
+            $annotation = $this->reader->getPropertyAnnotation(
+                $property,
+                DeserializeEntity::class
+            );
+            if (null === $annotation || !class_exists($annotation->type)) {
+                continue;
+            }
+
+            if(!$reflection->hasMethod($annotation->setter)) {
+                throw new \LogicException(
+                    "Object {$reflection->getName()} does not have the {$annotation->setter} method" 
+                );
+            }
+
+            $property->setAccessible(true);
+            $deserializedEntity = $property->getValue($object);
+            
+            if (null === $deserializedEntity) {
+                return;
+            }
+
+            $entityId = $deserializedEntity->{$annotation->idGetter}();
+            $repository = $this->doctrineRegistry->getRepository($annotation->type);
+
+            $entity = $repository->find($entityId);
+            if (null === $entity) {
+                throw new NotFoundHttpException(
+                    "Resource {$reflection->getShortName()}/$entityId"
+                );
+            }
+
+            $object->{$annotation->setter}($entity);
+        }
     }
 }

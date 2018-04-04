@@ -13,6 +13,8 @@ fos_rest:
     exception:
         enabled: true
         exception_controller: 'App\Controller\ExceptionController::showAction'
+    serializer:
+        groups: ['Default']
 #    exception:
 #        codes:
 #            App\Exception\MyException: 403

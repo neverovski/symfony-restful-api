@@ -78,17 +78,21 @@ class MoviesController extends AbstractController
 
     /**
      * @Rest\View(statusCode=201)
-     * @ParamConverter("role", converter="fos_rest.request_body")
+     * @ParamConverter("role", converter="fos_rest.request_body", options={"deserializationContext"={"groups"={"Deserialize"}}})
      * @Rest\NoRoute()
      */
-    public function postMovieRolesAction(Movie $movie, Role $role)
+    public function postMovieRolesAction(Movie $movie, Role $role, ConstraintViolationListInterface $validationErrors)
     {
+        if (count($validationErrors) > 0) {
+            throw new ValidationException($validationErrors);
+        }
+
         $role->setMovie($movie);
         $manager = $this->getDoctrine()->getManager();
 
         $manager->persist($role);
-
         $movie->getRoles()->add($role);
+
         $manager->persist($movie);
         $manager->flush();
 
