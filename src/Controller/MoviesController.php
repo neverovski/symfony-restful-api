@@ -2,9 +2,10 @@
 
 namespace App\Controller;
 
-use App\Entity\EntityMerger;
 use App\Entity\Movie;
 use App\Entity\Role;
+use App\Entity\EntityMerger;
+use Doctrine\Common\Annotations\Reader;
 use FOS\RestBundle\Controller\ControllerTrait;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use FOS\RestBundle\Controller\Annotations as Rest;
@@ -22,12 +23,18 @@ class MoviesController extends AbstractController
     private $entityMerger;
 
     /**
-     * @param EntityMerger $entityMerge
+     * @var Reader
      */
-    public function __construct(EntityMerger $entityMerger)
+    private $reader;
+
+    /**
+     * @var Reader $reader
+     */
+    public function __construct(Reader $reader)
     {
-        $this->entityMerger = $entityMerger;
+        $this->reader = $reader;
     }
+
     /**
      * @Rest\View()
      */
@@ -113,8 +120,8 @@ class MoviesController extends AbstractController
     }
 
     /**
-     * @Rest\View(statusCode=201)
-     * @ParamConverter("movie", converter="fos_rest.request_body", 
+     * @Rest\View()
+     * @ParamConverter("modifiedMovie", converter="fos_rest.request_body", 
      *     options={"validator" = {"groups" = {"Patch"}}}
      * )
      * @Rest\NoRoute()
@@ -128,6 +135,7 @@ class MoviesController extends AbstractController
         if (count($validationErrors) > 0) {
             throw new ValidationException($validationErrors);
         }
+        $this->entityMerger = new EntityMerger($this->reader);
 
         $this->entityMerger->merge($movie, $modifiedMovie);
 
