@@ -8,11 +8,15 @@ use App\Entity\EntityMerger;
 use Doctrine\Common\Annotations\Reader;
 use FOS\RestBundle\Controller\ControllerTrait;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 use App\Exception\ValidationException;
 
+/**
+ * @Security("is_anonymous() or is_authenticated()")
+ */
 class MoviesController extends AbstractController
 {
     use ControllerTrait;
@@ -125,6 +129,7 @@ class MoviesController extends AbstractController
      *     options={"validator" = {"groups" = {"Patch"}}}
      * )
      * @Rest\NoRoute()
+     * @Security("is_authenticated()")
      */
     public function patchMovieAction(?Movie $movie, Movie $modifiedMovie, ConstraintViolationListInterface $validationErrors)
     {
