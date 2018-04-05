@@ -13,6 +13,8 @@ class User implements UserInterface
 {
 
     /**
+     * @var int
+     *
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
@@ -20,14 +22,25 @@ class User implements UserInterface
     private $id;
 
     /**
+     * @var string
+     *
      * @ORM\Column(type="string", unique=true)
      */
     private $userName;
 
     /**
+     * @var string
+     *
      * @ORM\Column(type="string", unique=true)
      */
     private $apiKey;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="string")
+     */
+    private $password;
 
     /**
      * Returns the roles granted to the user.
@@ -60,7 +73,7 @@ class User implements UserInterface
      */
     public function getPassword()
     {
-
+        return $this->password;
     }
 
     /**
@@ -130,5 +143,13 @@ class User implements UserInterface
     {
         $this->userName = $userName;
         return $this;
+    }
+
+    /**
+     * @param string $password
+     */
+    public function setPassword(string $password): void
+    {
+        $this->password = $password;
     }
 }

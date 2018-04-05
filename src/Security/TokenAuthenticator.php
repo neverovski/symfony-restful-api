@@ -2,6 +2,8 @@
 
 namespace App\Security;
 
+use Lexik\Bundle\JWTAuthenticationBundle\Encoder\JWTEncoderInterface;
+use Lexik\Bundle\JWTAuthenticationBundle\TokenExtractor\AuthorizationHeaderTokenExtractor;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -13,6 +15,20 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
 
 class TokenAuthenticator extends AbstractGuardAuthenticator
 {
+    /**
+     * @var JWTEncoderInterface
+     */
+    private $jwtEncode;
+
+    /**
+     * TokenAuthenticator constructor.
+     * @param JWTEncoderInterface $jwtEncode
+     */
+    public function __construct(JWTEncoderInterface $jwtEncode)
+    {
+        $this->jwtEncode = $jwtEncode;
+    }
+
     /**
      * @param Request $request
      * @param AuthenticationException|null $authException
@@ -67,8 +83,14 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
      */
     public function getCredentials(Request $request)
     {
+        $extractor = new AuthorizationHeaderTokenExtractor('Bearer', 'Authorization');
+        $token = $extractor->extract($request);
+
+        if (!$token) {
+            return null;
+        }
         return array(
-            'token' => $request->headers->get('X-AUTH-TOKEN'),
+            'token' => $token,
         );
     }
 

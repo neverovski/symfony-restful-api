@@ -64,7 +64,7 @@ class EntityMerger
             $entityProperty = $entityReflection->getProperty($changedProperty->getName());
             $annotation = $this->reader->getPropertyAnnotation($entityProperty, Id::class);
 
-            // Ignore $changes property taht has Doctrine @Id annotation
+            // Ignore $changes property that has Doctrine @Id annotation
             if (null !== $annotation) {
                 continue;
             }
