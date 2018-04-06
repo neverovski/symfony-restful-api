@@ -41,3 +41,7 @@ movies_roles_post:
 user:
   resource: App\Controller\UserController
   type: annotation
+
+tokens:
+  resource: App\Controller\TokensController
+  type: rest
