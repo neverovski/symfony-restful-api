@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use Lexik\Bundle\JWTAuthenticationBundle\Encoder\JWTEncoderInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -20,10 +21,20 @@ class UserController extends AbstractController
      * @var UserPasswordEncoderInterface
      */
     private $passwordEncoder;
+    /**
+     * @var JWTEncoderInterface
+     */
+    private $jwtEncoder;
 
-    public function __construct(UserPasswordEncoderInterface $passwordEncoder)
+    /**
+     * UserController constructor.
+     * @param UserPasswordEncoderInterface $passwordEncoder
+     * @param JWTEncoderInterface $jwtEncoder
+     */
+    public function __construct(UserPasswordEncoderInterface $passwordEncoder, JWTEncoderInterface $jwtEncoder)
     {
         $this->passwordEncoder = $passwordEncoder;
+        $this->jwtEncoder = $jwtEncoder;
     }
 
     /**
@@ -32,7 +43,7 @@ class UserController extends AbstractController
      */
     public function tokenAction(Request $request)
     {
-        $user = $this->getDoctrine()->getRepository('App:User')->findOneBy(['userName' => $request->getUser()]);
+        $user = $this->getDoctrine()->getRepository('App:User')->findOneBy(['username' => $request->getUser()]);
         if (!$user) {
             throw new BadCredentialsException();
         }
@@ -42,6 +53,13 @@ class UserController extends AbstractController
         if (!$isPasswordValid) {
             throw new BadCredentialsException();
         }
-        return new JsonResponse(['token' => $user->getApiKey()]);
+
+        $token = $this->jwtEncoder->encode(
+            [
+                'username' => $user->getUsername(),
+                'time' => time() + 3600
+            ]
+        );
+        return new JsonResponse(['token' => $token]);
     }
 }

@@ -7,7 +7,7 @@ security:
         database:
             entity:
                 class: App:User
-                property: apiKey
+                property: username
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/

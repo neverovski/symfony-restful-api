@@ -3,6 +3,7 @@
 namespace App\Security;
 
 use Lexik\Bundle\JWTAuthenticationBundle\Encoder\JWTEncoderInterface;
+use Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTEncodeFailureException;
 use Lexik\Bundle\JWTAuthenticationBundle\TokenExtractor\AuthorizationHeaderTokenExtractor;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -55,7 +56,8 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
      */
     public function supports(Request $request)
     {
-        return $request->headers->has('X-AUTH-TOKEN');
+        $extractor = new AuthorizationHeaderTokenExtractor('Bearer', 'Authorization');
+        return $extractor->extract($request);
     }
 
     /**
@@ -102,23 +104,26 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
      * You may throw an AuthenticationException if you wish. If you return
      * null, then a UsernameNotFoundException is thrown for you.
      *
-     * @param mixed                 $credentials
+     * @param mixed $credentials
      * @param UserProviderInterface $userProvider
-     *
-     * @throws AuthenticationException
-     *
      * @return UserInterface|null
+     * @throws \Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTDecodeFailureException
      */
     public function getUser($credentials, UserProviderInterface $userProvider)
     {
-        $apiKey = $credentials['token'];
+        try {
+            $data = $this->jwtEncode->decode($credentials['token']);
 
-        if (null === $apiKey) {
-            return;
+            if (false === $data) {
+                return null;
+            }
+           // dump($data); die;
+            return $userProvider->loadUserByUsername($data['username']);
+
+        } catch (JWTEncodeFailureException $exception) {
+            return null;
         }
 
-        // if a User object, checkCredentials() is called
-        return $userProvider->loadUserByUsername($apiKey);
     }
 
     /**

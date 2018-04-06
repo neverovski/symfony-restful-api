@@ -26,7 +26,6 @@ class LoadUserData extends Fixture
     {
         $user = new User();
         $user->setUsername('neverovski');
-        $user->setApiKey('12456789');
         $password = $this->encoder->encodePassword($user, 'Security123!');
         $user->setPassword($password);
 

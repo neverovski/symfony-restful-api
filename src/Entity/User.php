@@ -26,14 +26,7 @@ class User implements UserInterface
      *
      * @ORM\Column(type="string", unique=true)
      */
-    private $userName;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(type="string", unique=true)
-     */
-    private $apiKey;
+    private $username;
 
     /**
      * @var string
@@ -95,7 +88,7 @@ class User implements UserInterface
      */
     public function getUsername()
     {
-        return $this->userName;
+        return $this->username;
     }
 
     /**
@@ -118,30 +111,12 @@ class User implements UserInterface
     }
 
     /**
-     * @return string
-     */
-    public function getApiKey(): string
-    {
-        return $this->apiKey;
-    }
-
-    /**
-     * @param string $apiKey
-     * * @return $this
-     */
-    public function setApiKey(string $apiKey)
-    {
-        $this->apiKey = $apiKey;
-        return $this;
-    }
-
-    /**
-     * @param string $userName
+     * @param string $username
      * @return $this
      */
-    public function setUsername(string $userName) 
+    public function setUsername(string $username)
     {
-        $this->userName = $userName;
+        $this->username = $username;
         return $this;
     }
 
