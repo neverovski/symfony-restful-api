@@ -15,7 +15,7 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 /**
  * @Security("is_anonymous() or is_authenticated()")
  */
-class UserController extends AbstractController
+class UsersController extends AbstractController
 {
     /**
      * @var UserPasswordEncoderInterface
@@ -38,10 +38,11 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/user/token")
-     * @Method("POST")
+     * @param Request $request
+     * @return JsonResponse
+     * @throws \Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTEncodeFailureException
      */
-    public function tokenAction(Request $request)
+    public function postUserAction(Request $request)
     {
         $user = $this->getDoctrine()->getRepository('App:User')->findOneBy(['username' => $request->getUser()]);
         if (!$user) {

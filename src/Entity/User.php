@@ -3,14 +3,20 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
+use JMS\Serializer\Annotation as Serializer;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
  * @ORM\Table(name="users")
+ * @UniqueEntity("username")
  */
 class User implements UserInterface
 {
+    const ROLE_USER = 'ROLE_USER';
+    const ROLE_ADMIN = 'ROLE_ADMIN';
 
     /**
      * @var int
@@ -18,6 +24,7 @@ class User implements UserInterface
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @Serializer\Groups({"Default", "Deserialize"})
      */
     private $id;
 
@@ -25,6 +32,8 @@ class User implements UserInterface
      * @var string
      *
      * @ORM\Column(type="string", unique=true)
+     * @Assert\NotBlank(groups={"Default"})
+     * @Serializer\Groups({"Default", "Deserialize"})
      */
     private $username;
 
@@ -32,8 +41,37 @@ class User implements UserInterface
      * @var string
      *
      * @ORM\Column(type="string")
+     * @Assert\NotBlank(groups={"Default"})
+     * @Assert\Regex(
+     *     pattern="/(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9]).{7,}/",
+     *     message="Password must be seven characters long and contain at least ane digit, one upper case and one lower case letter",
+     *     groups={"Default"}
+     * )
+     * @Serializer\Groups({"Deserialize"})
      */
     private $password;
+
+    /**
+     * @var string
+     *
+     * @Assert\NotBlank(groups={"Default"})
+     * @Assert\Expression(
+     *     "this.getPassword() === this.getRetypedPassword()",
+     *     message="Passwords does not match",
+     *     groups={"Default"}
+     * )
+     * @Serializer\Type("string")
+     * @Serializer\Groups({"Deserialize"})
+     */
+    private $retypedPassword;
+
+    /**
+     * @var array
+     *
+     * @ORM\Column(type="simple_array", length=200)
+     * @Serializer\Exclude()
+     */
+    private $roles;
 
     /**
      * Returns the roles granted to the user.
@@ -53,7 +91,23 @@ class User implements UserInterface
      */
     public function getRoles()
     {
-        return ['ROLE_USER'];
+        return $this->roles;
+    }
+
+    /**
+     * @param string $retypedPassword
+     */
+    public function setRetypedPassword(string $retypedPassword): void
+    {
+        $this->retypedPassword = $retypedPassword;
+    }
+
+    /**
+     * @param array $roles
+     */
+    public function setRoles(array $roles): void
+    {
+        $this->roles = $roles;
     }
 
     /**
@@ -105,7 +159,7 @@ class User implements UserInterface
     /**
      * @return int $id
      */
-    public function getId()
+    public function getId(): ?int
     {
         return $this->id;
     }
@@ -126,5 +180,13 @@ class User implements UserInterface
     public function setPassword(string $password): void
     {
         $this->password = $password;
+    }
+
+    /**
+     * @return string
+     */
+    public function getRetypedPassword(): ?string
+    {
+        return $this->retypedPassword;
     }
 }

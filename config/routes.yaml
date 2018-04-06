@@ -39,9 +39,16 @@ movies_roles_post:
         _format: json
 
 user:
-  resource: App\Controller\UserController
-  type: annotation
+    resource: App\Controller\UsersController
+    type: rest
+
+users_post:
+    path: /users
+    methods: [POST]
+    defaults:
+        _controller: App\Controller\UsersController:postUserAction
+        _format: json
 
 tokens:
-  resource: App\Controller\TokensController
-  type: rest
+    resource: App\Controller\TokensController
+    type: rest

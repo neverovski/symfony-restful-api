@@ -27,6 +27,7 @@ class LoadUserData extends Fixture
         $user = new User();
         $user->setUsername('neverovski');
         $password = $this->encoder->encodePassword($user, 'Security123!');
+        $user->setRoles([User::ROLE_ADMIN]);
         $user->setPassword($password);
 
         $manager->persist($user);
