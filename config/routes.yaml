@@ -49,6 +49,13 @@ users_post:
         _controller: App\Controller\UsersController:postUserAction
         _format: json
 
+users_patch:
+    path: /users/{theUser}
+    methods: [PATCH]
+    defaults:
+        _controller: App\Controller\UsersController:patchUserAction
+        _format: json
+
 tokens:
     resource: App\Controller\TokensController
     type: rest
