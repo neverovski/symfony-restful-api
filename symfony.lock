@@ -74,6 +74,9 @@
     "egulias/email-validator": {
         "version": "2.1.3"
     },
+    "exsyst/swagger": {
+        "version": "v0.4.0"
+    },
     "friendsofsymfony/rest-bundle": {
         "version": "2.2",
         "recipe": {
@@ -116,6 +119,15 @@
     "namshi/jose": {
         "version": "7.2.3"
     },
+    "nelmio/api-doc-bundle": {
+        "version": "3.0",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "master",
+            "version": "3.0",
+            "ref": "f95712101a2316e607a95ec54629e791fd3ee875"
+        }
+    },
     "nikic/php-parser": {
         "version": "v4.0.1"
     },
@@ -127,6 +139,15 @@
     },
     "phpcollection/phpcollection": {
         "version": "0.5.0"
+    },
+    "phpdocumentor/reflection-common": {
+        "version": "1.0.1"
+    },
+    "phpdocumentor/reflection-docblock": {
+        "version": "4.3.0"
+    },
+    "phpdocumentor/type-resolver": {
+        "version": "0.4.0"
     },
     "phpoption/phpoption": {
         "version": "1.5.0"
@@ -287,6 +308,9 @@
     "symfony/property-access": {
         "version": "v4.0.6"
     },
+    "symfony/property-info": {
+        "version": "v4.0.8"
+    },
     "symfony/routing": {
         "version": "4.0",
         "recipe": {
@@ -380,6 +404,9 @@
     "twig/twig": {
         "version": "v2.4.7"
     },
+    "webmozart/assert": {
+        "version": "1.3.0"
+    },
     "willdurand/hateoas": {
         "version": "2.12.0"
     },
@@ -397,5 +424,8 @@
     },
     "zendframework/zend-eventmanager": {
         "version": "3.2.0"
+    },
+    "zircote/swagger-php": {
+        "version": "2.0.13"
     }
 }
