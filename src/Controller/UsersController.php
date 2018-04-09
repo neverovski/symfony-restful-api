@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Security\TokenStorage;
 use App\Entity\EntityMerger;
 use App\Entity\User;
 use App\Exception\ValidationException;
@@ -39,20 +40,28 @@ class UsersController extends AbstractController
     private $reader;
 
     /**
+     * @var TokenStorage
+     */
+    private $tokenStorage;
+
+    /**
      * UserController constructor.
      * @param UserPasswordEncoderInterface $passwordEncoder
      * @param JWTEncoderInterface $jwtEncoder
      * @param Reader $reader
+     * @param TokenStorage $tokenStorage
      */
     public function __construct(
         UserPasswordEncoderInterface $passwordEncoder,
         JWTEncoderInterface $jwtEncoder,
-        Reader $reader
+        Reader $reader,
+        TokenStorage $tokenStorage
     )
     {
         $this->passwordEncoder = $passwordEncoder;
         $this->jwtEncoder = $jwtEncoder;
         $this->reader = $reader;
+        $this->tokenStorage = $tokenStorage;
     }
 
     /**
@@ -65,8 +74,9 @@ class UsersController extends AbstractController
             throw new NotFoundHttpException();
         }
 
-        return  $theUser;
+        return $theUser;
     }
+
     /**
      * @Rest\View(statusCode=201)
      * @ParamConverter(
@@ -120,6 +130,10 @@ class UsersController extends AbstractController
 
         $this->encodePassword($theUser);
         $this->persistUser($theUser);
+
+        if ($modifiedUser->getPassword()) {
+            $this->tokenStorage->invalidateToken($theUser->getUsername());
+        }
 
         return $theUser;
     }

@@ -22,12 +22,22 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
     private $jwtEncode;
 
     /**
+     * @var TokenStorage
+     */
+    private $tokenStorage;
+
+    /**
      * TokenAuthenticator constructor.
      * @param JWTEncoderInterface $jwtEncode
+     * @param TokenStorage $tokenStorage
      */
-    public function __construct(JWTEncoderInterface $jwtEncode)
+    public function __construct(
+        JWTEncoderInterface $jwtEncode,
+        TokenStorage $tokenStorage
+    )
     {
         $this->jwtEncode = $jwtEncode;
+        $this->tokenStorage = $tokenStorage;
     }
 
     /**
@@ -117,7 +127,10 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
             if (false === $data) {
                 return null;
             }
-           // dump($data); die;
+
+            if ($this->tokenStorage->isTokenValid($data['username'], $credentials['token'])) {
+                return null;
+            }
             return $userProvider->loadUserByUsername($data['username']);
 
         } catch (JWTEncodeFailureException $exception) {
@@ -135,7 +148,7 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
      *
      * The *credentials* are the return value from getCredentials()
      *
-     * @param mixed         $credentials
+     * @param mixed $credentials
      * @param UserInterface $user
      *
      * @return bool
@@ -160,7 +173,7 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
      * If you return null, the request will continue, but the user will
      * not be authenticated. This is probably not what you want to do.
      *
-     * @param Request                 $request
+     * @param Request $request
      * @param AuthenticationException $exception
      *
      * @return Response|null
@@ -186,9 +199,9 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
      * If you return null, the current request will continue, and the user
      * will be authenticated. This makes sense, for example, with an API.
      *
-     * @param Request        $request
+     * @param Request $request
      * @param TokenInterface $token
-     * @param string         $providerKey The provider (i.e. firewall) key
+     * @param string $providerKey The provider (i.e. firewall) key
      *
      * @return Response|null
      */
