@@ -59,3 +59,14 @@ users_patch:
 tokens:
     resource: App\Controller\TokensController
     type: rest
+
+images:
+    resource: App\Controller\ImagesController
+    type: rest
+
+users_post:
+    path: /images
+    methods: [POST]
+    defaults:
+        _controller: App\Controller\ImagesController:postImagesAction
+        _format: json

@@ -5,7 +5,6 @@ namespace App\Controller;
 use App\Entity\Movie;
 use App\Entity\Role;
 use App\Entity\EntityMerger;
-use Doctrine\Common\Annotations\Reader;
 use FOS\RestBundle\Controller\ControllerTrait;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
