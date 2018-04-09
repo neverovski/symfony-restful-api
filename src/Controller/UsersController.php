@@ -6,7 +6,6 @@ use App\Security\TokenStorage;
 use App\Entity\EntityMerger;
 use App\Entity\User;
 use App\Exception\ValidationException;
-use Doctrine\Common\Annotations\Reader;
 use Lexik\Bundle\JWTAuthenticationBundle\Encoder\JWTEncoderInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -35,11 +34,6 @@ class UsersController extends AbstractController
     private $entityMerger;
 
     /**
-     * @var Reader
-     */
-    private $reader;
-
-    /**
      * @var TokenStorage
      */
     private $tokenStorage;
@@ -48,20 +42,20 @@ class UsersController extends AbstractController
      * UserController constructor.
      * @param UserPasswordEncoderInterface $passwordEncoder
      * @param JWTEncoderInterface $jwtEncoder
-     * @param Reader $reader
      * @param TokenStorage $tokenStorage
+     * @param EntityMerger $entityMerger
      */
     public function __construct(
         UserPasswordEncoderInterface $passwordEncoder,
         JWTEncoderInterface $jwtEncoder,
-        Reader $reader,
-        TokenStorage $tokenStorage
+        TokenStorage $tokenStorage,
+        EntityMerger $entityMerger
     )
     {
         $this->passwordEncoder = $passwordEncoder;
         $this->jwtEncoder = $jwtEncoder;
-        $this->reader = $reader;
         $this->tokenStorage = $tokenStorage;
+        $this->entityMerger = $entityMerger;
     }
 
     /**
@@ -125,7 +119,6 @@ class UsersController extends AbstractController
         if (empty($modifiedUser->getPassword())) {
             $modifiedUser->setPassword(null);
         }
-        $this->entityMerger = new EntityMerger($this->reader);
         $this->entityMerger->merge($theUser, $modifiedUser);
 
         $this->encodePassword($theUser);

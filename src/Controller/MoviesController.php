@@ -27,16 +27,12 @@ class MoviesController extends AbstractController
     private $entityMerger;
 
     /**
-     * @var Reader
+     * MoviesController constructor.
+     * @param EntityMerger $entityMerger
      */
-    private $reader;
-
-    /**
-     * @var Reader $reader
-     */
-    public function __construct(Reader $reader)
+    public function __construct(EntityMerger $entityMerger)
     {
-        $this->reader = $reader;
+        $this->entityMerger = $entityMerger;
     }
 
     /**
@@ -140,7 +136,6 @@ class MoviesController extends AbstractController
         if (count($validationErrors) > 0) {
             throw new ValidationException($validationErrors);
         }
-        $this->entityMerger = new EntityMerger($this->reader);
 
         $this->entityMerger->merge($movie, $modifiedMovie);
 

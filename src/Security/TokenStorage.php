@@ -11,7 +11,7 @@ class TokenStorage
     /**
      * @var Client
      */
-    private $redisClient;
+    protected $redisClient;
 
     /**
      * TokenStorage constructor.

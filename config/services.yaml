@@ -29,3 +29,9 @@ services:
     App\Serializer\DoctrineEntityDeserializationSubscriber:
         tags: ['jms_serializer.event_subscriber']
         public: true
+
+    Predis\Client:
+        autowire: true
+
+    App\Entity\EntityMerger:
+        autowire: true
