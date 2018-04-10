@@ -48,6 +48,13 @@ class ImagesController extends AbstractController
     }
 
     /**
+     * @Rest\View()
+     */
+    public function getImagesAction()
+    {
+        return $this->imageRepository->findAll();
+    }
+    /**
      * @ParamConverter(
      *     "image",
      *     converter="fos_rest.request_body",
