@@ -64,9 +64,21 @@ images:
     resource: App\Controller\ImagesController
     type: rest
 
-users_post:
+images_post:
     path: /images
     methods: [POST]
     defaults:
         _controller: App\Controller\ImagesController:postImagesAction
         _format: json
+
+images_upload_put:
+    path: /images/{image}/upload
+    methods: [PUT]
+    defaults:
+        _controller: App\Controller\ImagesController:putImageUploadAction
+        _format: json
+
+app.swagger_ui:
+    path: /api/doc
+    methods: GET
+    defaults: { _controller: nelmio_api_doc.controller.swagger_ui }

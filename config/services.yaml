@@ -2,6 +2,8 @@
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
     locale: 'en'
+    image_directory: '%kernel.project_dir%/public/uploads/images'
+    image_base_url: '/uploads/images/'
 
 services:
     # default configuration for services in *this* file
