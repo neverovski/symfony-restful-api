@@ -82,7 +82,7 @@ class ImagesController extends AbstractController
         // Create the temporary upload file (deleted after request finishes)
         $tmpFile = tmpfile();
         // Get the temporary file name
-        $tmpFilePatch = stream_get_meta_data($tmpFile)['path'];
+        $tmpFilePatch = stream_get_meta_data($tmpFile)['uri'];
         // Write image content to the temporary file
         file_put_contents($tmpFilePatch, $content);
 

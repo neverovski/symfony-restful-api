@@ -10,19 +10,28 @@ use Doctrine\ORM\Mapping as ORM;
 class Image
 {
     /**
+     * @var int
+     *
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Serializer\Groups({"Default"})
      */
     private $id;
 
     /**
+     * @var  string
+     *
      * @ORM\Column(type="text", nullable=true)
+     * @Serializer\Groups({"Default", "Deserialize"})
      */
     private $description;
 
     /**
+     * @var string
+     *
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Serializer\Groups({"Default"})
      */
     private $url;
 
