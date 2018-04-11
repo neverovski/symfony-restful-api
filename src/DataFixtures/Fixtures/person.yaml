@@ -1,0 +1,5 @@
+App\Entity\Person:
+    person_{1..1000}:
+        firstname: <firstName()>
+        lastname: <lastName()>
+        dateOfBirth: <dateTimeBetween('1920-01-01', '2007-10-30')>

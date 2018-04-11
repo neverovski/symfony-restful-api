@@ -69,8 +69,8 @@ class ImagesController extends AbstractController
         return $this->view($image, Response::HTTP_CREATED)->setHeader(
             'Location',
             $this->generateUrl(
-                'Images_upload_put',
-                ['images' => $image->getId()]
+                'images_upload_put',
+                ['image' => $image->getId()]
             )
         );
     }

@@ -6,7 +6,6 @@
         "ext-iconv": "*",
         "doctrine/doctrine-bundle": "^1.8",
         "doctrine/doctrine-migrations-bundle": "^1.3",
-        "doctrine/orm": "^2.6",
         "friendsofsymfony/rest-bundle": "^2.3",
         "jms/serializer-bundle": "^2.3",
         "lexik/jwt-authentication-bundle": "^2.4",
@@ -36,6 +35,7 @@
     },
     "require-dev": {
         "doctrine/doctrine-fixtures-bundle": "^3.0",
+        "nelmio/alice": "^3.3",
         "symfony/debug-bundle": "^4.0",
         "symfony/dotenv": "^4.0",
         "symfony/web-profiler-bundle": "^4.0",
@@ -74,6 +74,9 @@
         ],
         "post-update-cmd": [
             "@auto-scripts"
+        ],
+        "reset-db": [
+          "php bin/console doctrine:schema:drop --force; php bin/console doctrine:schema:create; php bin/console doctrine:fixtures:load -q;"
         ]
     },
     "conflict": {

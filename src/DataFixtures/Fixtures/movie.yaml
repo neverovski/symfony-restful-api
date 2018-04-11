@@ -1,0 +1,6 @@
+App\Entity\Movie:
+    movie_{1..100}:
+        title: <streetName()>
+        year: <numberBetween(1886, 2017)>
+        time: <numberBetween(30, 300)>
+        description: <sentence()>

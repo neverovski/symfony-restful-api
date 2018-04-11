@@ -1,0 +1,18 @@
+App\Entity\Person:
+    person_{1..1000}:
+        firstname: <firstName()>
+        lastname: <lastName()>
+        dateOfBirth: <dateTimeBetween('1920-01-01', '2007-10-30')>
+
+App\Entity\Movie:
+    movie_{1..100}:
+        title: <streetName()>
+        year: <numberBetween(1886, 2017)>
+        time: <numberBetween(30, 300)>
+        description: <sentence()>
+
+App\Entity\Role:
+    role_{1..5000}:
+        person: '@person_<numberBetween(1, 1000)>'
+        movie: '@movie_<numberBetween(1, 100)>'
+        playedName: <firstName()> <lastName()>
