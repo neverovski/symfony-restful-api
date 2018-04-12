@@ -91,4 +91,12 @@ class MovieFilterDefinition
     {
         return $this->timeTo;
     }
+
+    /**
+     * @return array
+     */
+    public function getQueryParameters(): array
+    {
+        return get_object_vars($this);
+    }
 }
