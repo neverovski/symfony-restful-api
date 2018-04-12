@@ -58,7 +58,7 @@ class MoviesController extends AbstractController
         $movieFilterDefinitionFactory = new MovieFilterDefinitionFactory();
         $movieFilterDefinition = $movieFilterDefinitionFactory->factory($request);
         dump($movieFilterDefinition); die;
-        
+
         return $this->pagination->paginate(
             $request,
             'App:Movie',
