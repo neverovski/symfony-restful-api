@@ -6,10 +6,13 @@ use App\Entity\Movie;
 use App\Entity\Role;
 use App\Entity\EntityMerger;
 use FOS\RestBundle\Controller\ControllerTrait;
+use Hateoas\Representation\CollectionRepresentation;
+use Hateoas\Representation\PaginatedRepresentation;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 use App\Exception\ValidationException;
 
@@ -37,10 +40,29 @@ class MoviesController extends AbstractController
     /**
      * @Rest\View()
      */
-    public function getMoviesAction()
+    public function getMoviesAction(Request $request)
     {
-        $movies = $this->getDoctrine()->getRepository('App:Movie')->findAll();
-        return $movies;
+        $limit = $request->get('limit', 5);
+        $page = $request->get('page', 1);
+
+        $offset = ($page - 1) * $limit;
+        $repository = $this->getDoctrine()->getRepository('App:Movie');
+
+        $movies = $repository->findBy([], [], $limit, $offset);
+        $movieCount = $repository->findCount();
+
+        $pageCount = (int)ceil($movieCount/$limit);
+
+        $collection = new CollectionRepresentation($movies);
+        $paginated = new PaginatedRepresentation(
+            $collection,
+            'get_movies',
+            [],
+            $page,
+            $limit,
+            $pageCount
+        );
+        return $paginated;
     }
 
     /**
