@@ -2,9 +2,11 @@
 
 namespace App\Controller;
 
+use App\Controller\Pagination\Pagination;
 use App\Entity\Movie;
 use App\Entity\Role;
 use App\Entity\EntityMerger;
+use App\Repository\RoleRepository;
 use FOS\RestBundle\Controller\ControllerTrait;
 use Hateoas\Representation\CollectionRepresentation;
 use Hateoas\Representation\PaginatedRepresentation;
@@ -27,14 +29,20 @@ class MoviesController extends AbstractController
      * @var EntityMerger
      */
     private $entityMerger;
+    /**
+     * @var Pagination
+     */
+    private $pagination;
 
     /**
      * MoviesController constructor.
      * @param EntityMerger $entityMerger
+     * @param Pagination $pagination
      */
-    public function __construct(EntityMerger $entityMerger)
+    public function __construct(EntityMerger $entityMerger, Pagination $pagination)
     {
         $this->entityMerger = $entityMerger;
+        $this->pagination = $pagination;
     }
 
     /**
@@ -42,27 +50,15 @@ class MoviesController extends AbstractController
      */
     public function getMoviesAction(Request $request)
     {
-        $limit = $request->get('limit', 5);
-        $page = $request->get('page', 1);
-
-        $offset = ($page - 1) * $limit;
-        $repository = $this->getDoctrine()->getRepository('App:Movie');
-
-        $movies = $repository->findBy([], [], $limit, $offset);
-        $movieCount = $repository->findCount();
-
-        $pageCount = (int)ceil($movieCount/$limit);
-
-        $collection = new CollectionRepresentation($movies);
-        $paginated = new PaginatedRepresentation(
-            $collection,
-            'get_movies',
+        return $this->pagination->paginate(
+            $request,
+            'App:Movie',
             [],
-            $page,
-            $limit,
-            $pageCount
+            'findCount',
+            [],
+            'get_movies',
+            []
         );
-        return $paginated;
     }
 
     /**
@@ -85,8 +81,8 @@ class MoviesController extends AbstractController
 
     /**
      * @Rest\View()
-     */ 
-    public function deleteMovieAction(?Movie $movie) 
+     */
+    public function deleteMovieAction(?Movie $movie)
     {
         if (null === $movie) {
             return $this->view(null, 404);
@@ -114,13 +110,20 @@ class MoviesController extends AbstractController
      */
     public function getMovieRolesAction(Request $request, Movie $movie)
     {
-        $roles = $movie->getRoles();
         $limit = $request->get('limit', 5);
         $page = $request->get('page', 1);
-
+        /** @var RoleRepository $repository */
+        $repository = $this->getDoctrine()->getRepository('App:Role');
         $offset = ($page - 1) * $limit;
-        $pageCount = (int)ceil(count($roles) / $limit);
-        $collection = new CollectionRepresentation(array_splice($roles->toArray(), $offset, $limit));
+        $roles = $repository->findBy(
+            ['movie' => $movie->getId()],
+            [],
+            $limit,
+            $offset
+        );
+        $roleCount = $repository->getCountMovie($movie->getId());
+        $pageCount = (int)ceil($roleCount / $limit);
+        $collection = new CollectionRepresentation($roles);
         $paginated = new PaginatedRepresentation(
             $collection,
             'get_movie_roles',
@@ -129,7 +132,15 @@ class MoviesController extends AbstractController
             $limit,
             $pageCount
         );
-        return $paginated;
+        return $this->pagination->paginate(
+            $request,
+            'App:Role',
+            [],
+            'getCountMovie',
+            [$movie->getId()],
+            'get_movie_roles',
+            ['movie' => $movie->getId()]
+        );
     }
 
     /**
@@ -157,7 +168,7 @@ class MoviesController extends AbstractController
 
     /**
      * @Rest\View()
-     * @ParamConverter("modifiedMovie", converter="fos_rest.request_body", 
+     * @ParamConverter("modifiedMovie", converter="fos_rest.request_body",
      *     options={"validator" = {"groups" = {"Patch"}}}
      * )
      * @Rest\NoRoute()
