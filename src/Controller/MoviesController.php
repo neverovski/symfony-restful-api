@@ -112,9 +112,24 @@ class MoviesController extends AbstractController
     /**
      * @Rest\View()
      */
-    public function getMovieRolesAction(Movie $movie)
+    public function getMovieRolesAction(Request $request, Movie $movie)
     {
-        return $movie->getRoles();
+        $roles = $movie->getRoles();
+        $limit = $request->get('limit', 5);
+        $page = $request->get('page', 1);
+
+        $offset = ($page - 1) * $limit;
+        $pageCount = (int)ceil(count($roles) / $limit);
+        $collection = new CollectionRepresentation(array_splice($roles->toArray(), $offset, $limit));
+        $paginated = new PaginatedRepresentation(
+            $collection,
+            'get_movie_roles',
+            ['movie' => $movie->getId()],
+            $page,
+            $limit,
+            $pageCount
+        );
+        return $paginated;
     }
 
     /**
