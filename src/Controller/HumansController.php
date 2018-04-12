@@ -2,11 +2,13 @@
 
 namespace App\Controller;
 
+use App\Controller\Pagination\Pagination;
 use App\Entity\Person;
 use FOS\RestBundle\Controller\ControllerTrait;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use FOS\RestBundle\Controller\Annotations as Rest;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 use App\Exception\ValidationException;
 
@@ -15,12 +17,33 @@ class HumansController extends AbstractController
     use ControllerTrait;
 
     /**
+     * @var Pagination
+     */
+    private $pagination;
+
+    /**
+     * HumansController constructor.
+     * @param Pagination $pagination
+     */
+    public function __construct(Pagination $pagination)
+    {
+        $this->pagination = $pagination;
+    }
+
+    /**
      * @Rest\View()
      */
-    public function getHumansAction()
+    public function getHumansAction(Request $request)
     {
-        $person = $this->getDoctrine()->getRepository('App:Person')->findAll();
-        return $person;
+        return $this->pagination->paginate(
+            $request,
+            'App:Person',
+            [],
+            'findCount',
+            [],
+            'get_humans',
+            []
+        );
     }
 
     /**
