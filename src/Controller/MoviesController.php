@@ -7,6 +7,8 @@ use App\Entity\Movie;
 use App\Entity\Role;
 use App\Entity\EntityMerger;
 use App\Repository\RoleRepository;
+use App\Resource\Filtering\Movie\MovieFilterDefinitionFactory;
+use App\Resource\Pagination\PageRequestFactory;
 use FOS\RestBundle\Controller\ControllerTrait;
 use Hateoas\Representation\CollectionRepresentation;
 use Hateoas\Representation\PaginatedRepresentation;
@@ -50,6 +52,13 @@ class MoviesController extends AbstractController
      */
     public function getMoviesAction(Request $request)
     {
+        $pageRequestFactory = new PageRequestFactory();
+        $page = $pageRequestFactory->fromRequest($request);
+
+        $movieFilterDefinitionFactory = new MovieFilterDefinitionFactory();
+        $movieFilterDefinition = $movieFilterDefinitionFactory->factory($request);
+        dump($movieFilterDefinition); die;
+        
         return $this->pagination->paginate(
             $request,
             'App:Movie',
