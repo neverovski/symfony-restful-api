@@ -30,19 +30,33 @@ class MovieFilterDefinition
     private $timeTo;
 
     /**
+     * @var array|null
+     */
+    private $sortByArray;
+
+    /**
+     * @var null|string
+     */
+    private $sortByQuery;
+
+    /**
      * MovieFilterDefinition constructor.
      * @param null|string $title
      * @param int|null $yearFrom
      * @param int|null $yearTo
      * @param int|null $timeFrom
      * @param int|null $timeTo
+     * @param null|string $sortByQuery
+     * @param array|null $sortByArray
      */
     public function __construct(
         ?string $title,
         ?int $yearFrom,
         ?int $yearTo,
         ?int $timeFrom,
-        ?int $timeTo
+        ?int $timeTo,
+        ?string $sortByQuery,
+        ?array $sortByArray
     )
     {
         $this->title = $title;
@@ -50,6 +64,8 @@ class MovieFilterDefinition
         $this->yearTo = $yearTo;
         $this->timeFrom = $timeFrom;
         $this->timeTo = $timeTo;
+        $this->sortByQuery = $sortByQuery;
+        $this->sortByArray = $sortByArray;
     }
 
     /**
@@ -99,4 +115,21 @@ class MovieFilterDefinition
     {
         return get_object_vars($this);
     }
+
+    /**
+     * @return array|null
+     */
+    public function getSortByArray(): ?array
+    {
+        return $this->sortByArray;
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getSortByQuery(): ?string
+    {
+        return $this->sortByQuery;
+    }
+
 }

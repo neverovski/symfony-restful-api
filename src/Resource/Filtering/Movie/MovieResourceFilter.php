@@ -64,29 +64,31 @@ class MovieResourceFilter
             $qb->andWhere(
                 $qb->expr()->gte('movie.year', ':yearFrom')
             );
-            $qb->setParameter('yearFrom', "%{$filter->getYearFrom()}%");
+            $qb->setParameter('yearFrom', $filter->getYearFrom());
         }
 
         if (null !== $filter->getYearTo()) {
             $qb->andWhere(
                 $qb->expr()->lte('movie.year', ':yearTo')
             );
-            $qb->setParameter('yearTo', "%{$filter->getYearTo()}%");
+            $qb->setParameter('yearTo', $filter->getYearTo());
         }
 
         if (null !== $filter->getTimeFrom()) {
             $qb->andWhere(
                 $qb->expr()->gte('movie.time', ':timeFrom')
             );
-            $qb->setParameter('timeFrom', "%{$filter->getTimeFrom()}%");
+            $qb->setParameter('timeFrom', $filter->getTimeFrom());
         }
 
         if (null !== $filter->getTimeTo()) {
             $qb->andWhere(
                 $qb->expr()->lte('movie.time', ':timeTo')
             );
-            $qb->setParameter('timeTo', "%{$filter->getTimeTo()}%");
+            $qb->setParameter('timeTo', $filter->getTimeTo());
         }
+
+        dump($filter); die;
         return $qb;
     }
 
