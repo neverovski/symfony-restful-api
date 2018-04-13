@@ -2,8 +2,10 @@
 
 namespace App\Controller;
 
-use App\Controller\Pagination\Pagination;
 use App\Entity\Person;
+use App\Resource\Filtering\Person\PersonFilterDefinitionFactory;
+use App\Resource\Pagination\PageRequestFactory;
+use App\Resource\Pagination\Person\PersonPagination;
 use FOS\RestBundle\Controller\ControllerTrait;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -17,17 +19,17 @@ class HumansController extends AbstractController
     use ControllerTrait;
 
     /**
-     * @var Pagination
+     * @var PersonPagination
      */
-    private $pagination;
+    private $personPagination;
 
     /**
      * HumansController constructor.
-     * @param Pagination $pagination
+     * @param PersonPagination $personPagination
      */
-    public function __construct(Pagination $pagination)
+    public function __construct(PersonPagination $personPagination)
     {
-        $this->pagination = $pagination;
+        $this->personPagination = $personPagination;
     }
 
     /**
@@ -35,15 +37,13 @@ class HumansController extends AbstractController
      */
     public function getHumansAction(Request $request)
     {
-        return $this->pagination->paginate(
-            $request,
-            'App:Person',
-            [],
-            'findCount',
-            [],
-            'get_humans',
-            []
-        );
+        $pageRequestFactory = new PageRequestFactory();
+        $page = $pageRequestFactory->fromRequest($request);
+
+        $personFilterDefinitionFactory = new PersonFilterDefinitionFactory();
+        $personFilterDefinition = $personFilterDefinitionFactory->factory($request);
+
+        return $this->personPagination->paginate($page, $personFilterDefinition);
     }
 
     /**
@@ -66,8 +66,8 @@ class HumansController extends AbstractController
 
     /**
      * @Rest\View()
-     */ 
-    public function deleteHumanAction(?Person $person) 
+     */
+    public function deleteHumanAction(?Person $person)
     {
         if (null === $person) {
             return $this->view(null, 404);

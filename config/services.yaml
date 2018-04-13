@@ -36,11 +36,6 @@ services:
     App\Entity\EntityMerger:
         autowire: true
 
-    App\Controller\Pagination\Pagination:
-        autowire: true
-
-
-
     App\Controller\ImagesController:
         arguments:
             $imageDirectory: '%kernel.project_dir%/public/uploads/images'
