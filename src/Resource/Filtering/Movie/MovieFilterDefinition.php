@@ -129,4 +129,12 @@ class MovieFilterDefinition
     {
         return $this->sortBy;
     }
+
+    /**
+     * @return array
+     */
+    public function getParameters(): array
+    {
+        return get_object_vars($this);
+    }
 }

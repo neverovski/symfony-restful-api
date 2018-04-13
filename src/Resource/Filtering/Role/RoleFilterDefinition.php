@@ -82,4 +82,12 @@ class RoleFilterDefinition
     {
         return $this->sortByArray;
     }
+
+    /**
+     * @return array
+     */
+    public function getParameters(): array
+    {
+        return get_object_vars($this);
+    }
 }

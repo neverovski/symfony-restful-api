@@ -37,7 +37,7 @@ services:
         autowire: true
 
     App\Controller\Pagination\Pagination:
-            autowire: true
+        autowire: true
 
 
 

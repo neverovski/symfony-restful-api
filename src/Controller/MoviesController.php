@@ -2,17 +2,15 @@
 
 namespace App\Controller;
 
-use App\Controller\Pagination\Pagination;
 use App\Entity\Movie;
 use App\Entity\Role;
 use App\Entity\EntityMerger;
-use App\Repository\RoleRepository;
 use App\Resource\Filtering\Movie\MovieFilterDefinitionFactory;
+use App\Resource\Filtering\Role\RoleFilterDefinitionFactory;
 use App\Resource\Pagination\Movie\MoviePagination;
 use App\Resource\Pagination\PageRequestFactory;
+use App\Resource\Pagination\Role\RolePagination;
 use FOS\RestBundle\Controller\ControllerTrait;
-use Hateoas\Representation\CollectionRepresentation;
-use Hateoas\Representation\PaginatedRepresentation;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use FOS\RestBundle\Controller\Annotations as Rest;
@@ -32,30 +30,32 @@ class MoviesController extends AbstractController
      * @var EntityMerger
      */
     private $entityMerger;
-    /**
-     * @var Pagination
-     */
-    private $pagination;
+
     /**
      * @var MoviePagination
      */
     private $moviePagination;
 
     /**
+     * @var RolePagination
+     */
+    private $rolePagination;
+
+    /**
      * MoviesController constructor.
      * @param EntityMerger $entityMerger
-     * @param Pagination $pagination
      * @param MoviePagination $moviePagination
+     * @param RolePagination $rolePagination
      */
     public function __construct(
         EntityMerger $entityMerger,
-        Pagination $pagination, // This will be removed
-        MoviePagination $moviePagination
+        MoviePagination $moviePagination,
+        RolePagination $rolePagination
     )
     {
         $this->entityMerger = $entityMerger;
-        $this->pagination = $pagination;
         $this->moviePagination = $moviePagination;
+        $this->rolePagination = $rolePagination;
     }
 
     /**
@@ -70,16 +70,6 @@ class MoviesController extends AbstractController
         $movieFilterDefinition = $movieFilterDefinitionFactory->factory($request);
 
         return $this->moviePagination->paginate($page, $movieFilterDefinition);
-
-        /*return $this->pagination->paginate(
-            $request,
-            'App:Movie',
-            [],
-            'findCount',
-            [],
-            'get_movies',
-            []
-        ); */
     }
 
     /**
@@ -131,37 +121,16 @@ class MoviesController extends AbstractController
      */
     public function getMovieRolesAction(Request $request, Movie $movie)
     {
-        $limit = $request->get('limit', 5);
-        $page = $request->get('page', 1);
-        /** @var RoleRepository $repository */
-        $repository = $this->getDoctrine()->getRepository('App:Role');
-        $offset = ($page - 1) * $limit;
-        $roles = $repository->findBy(
-            ['movie' => $movie->getId()],
-            [],
-            $limit,
-            $offset
-        );
-        $roleCount = $repository->getCountMovie($movie->getId());
-        $pageCount = (int)ceil($roleCount / $limit);
-        $collection = new CollectionRepresentation($roles);
-        $paginated = new PaginatedRepresentation(
-            $collection,
-            'get_movie_roles',
-            ['movie' => $movie->getId()],
-            $page,
-            $limit,
-            $pageCount
-        );
-        return $this->pagination->paginate(
+        $pageRequestFactory = new PageRequestFactory();
+        $page = $pageRequestFactory->fromRequest($request);
+
+        $roleFilterDefinitionFactory = new RoleFilterDefinitionFactory();
+        $roleFilterDefinition = $roleFilterDefinitionFactory->factory(
             $request,
-            'App:Role',
-            [],
-            'getCountMovie',
-            [$movie->getId()],
-            'get_movie_roles',
-            ['movie' => $movie->getId()]
+            $movie->getId()
         );
+
+        return $this->rolePagination->paginate($page, $roleFilterDefinition);
     }
 
     /**

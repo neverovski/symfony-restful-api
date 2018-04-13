@@ -18,13 +18,14 @@ class RoleFilterDefinitionFactory
 
     /**
      * @param Request $request
+     * @param int|null $movie
      * @return RoleFilterDefinition
      */
-    public function factory(Request $request): RoleFilterDefinition
+    public function factory(Request $request, ?int $movie): RoleFilterDefinition
     {
         return new RoleFilterDefinition(
             $request->get(self::KEY_PLAYED_NAME),
-            $request->get(self::KEY_MOVIE),
+            $movie,
             $request->get(self::KEY_SORT_BY_QUERY),
             $this->sortQueryToArray($request->get(self::KEY_SORT_BY_ARRAY))
         );
