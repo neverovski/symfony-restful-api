@@ -1,4 +1,7 @@
 {
+    "clue/stream-filter": {
+        "version": "v1.4.0"
+    },
     "composer/ca-bundle": {
         "version": "1.1.1"
     },
@@ -77,6 +80,12 @@
     "exsyst/swagger": {
         "version": "v0.4.0"
     },
+    "friendsofsymfony/http-cache": {
+        "version": "2.2.1"
+    },
+    "friendsofsymfony/http-cache-bundle": {
+        "version": "2.2.0"
+    },
     "friendsofsymfony/rest-bundle": {
         "version": "2.2",
         "recipe": {
@@ -88,6 +97,15 @@
     },
     "fzaninotto/faker": {
         "version": "v1.7.1"
+    },
+    "guzzlehttp/guzzle": {
+        "version": "6.3.2"
+    },
+    "guzzlehttp/promises": {
+        "version": "v1.3.1"
+    },
+    "guzzlehttp/psr7": {
+        "version": "1.4.2"
     },
     "jdorn/sql-formatter": {
         "version": "v1.2.17"
@@ -146,6 +164,27 @@
     "ocramius/proxy-manager": {
         "version": "2.2.0"
     },
+    "php-http/client-common": {
+        "version": "1.7.0"
+    },
+    "php-http/discovery": {
+        "version": "1.4.0"
+    },
+    "php-http/guzzle6-adapter": {
+        "version": "v1.1.1"
+    },
+    "php-http/httplug": {
+        "version": "v1.1.0"
+    },
+    "php-http/message": {
+        "version": "1.6.0"
+    },
+    "php-http/message-factory": {
+        "version": "v1.0.2"
+    },
+    "php-http/promise": {
+        "version": "v1.0.0"
+    },
     "phpcollection/phpcollection": {
         "version": "0.5.0"
     },
@@ -169,6 +208,9 @@
     },
     "psr/container": {
         "version": "1.0.0"
+    },
+    "psr/http-message": {
+        "version": "1.0.1"
     },
     "psr/log": {
         "version": "1.0.2"
