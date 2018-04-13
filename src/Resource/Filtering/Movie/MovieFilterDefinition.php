@@ -2,9 +2,14 @@
 
 namespace App\Resource\Filtering\Movie;
 
+use App\Resource\Filtering\AbstractFilterDefinition;
+use App\Resource\Filtering\FilterDefinitionInterface;
+use App\Resource\Filtering\SortTableFilterDefinitionInterface;
+
 class MovieFilterDefinition
+    extends AbstractFilterDefinition
+    implements FilterDefinitionInterface, SortTableFilterDefinitionInterface
 {
-    private const QUERY_PARAMS_BLACKLIST = ['sortByArray'];
     /**
      * @var null|string
      */
@@ -110,17 +115,6 @@ class MovieFilterDefinition
     }
 
     /**
-     * @return array
-     */
-    public function getQueryParameters(): array
-    {
-        return array_diff_key(
-            get_object_vars($this),
-            array_flip(self::QUERY_PARAMS_BLACKLIST)
-        );
-    }
-
-    /**
      * @return array|null
      */
     public function getSortByArray(): ?array
@@ -135,5 +129,4 @@ class MovieFilterDefinition
     {
         return $this->sortBy;
     }
-
 }
