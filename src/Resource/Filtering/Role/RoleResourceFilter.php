@@ -58,8 +58,8 @@ class RoleResourceFilter implements ResourceFilterInterface
         }
 
         if (null !== $filter->getMovie()) {
-            $qb->where(
-                $qb->expr()->like('role.movie', ':movieId')
+            $qb->andWhere(
+                $qb->expr()->eq('role.movie', ':movieId')
             );
             $qb->setParameter('movieId', $filter->getMovie());
         }
