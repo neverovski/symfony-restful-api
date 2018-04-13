@@ -39,7 +39,7 @@ class MovieResourceFilter
      */
     public function getResourceCount($filter): QueryBuilder
     {
-        $qb = $this->getQuery($filter);
+        $qb = $this->getQuery($filter, 'count');
         $qb->select('count(movie)');
 
         return $qb;
@@ -47,9 +47,10 @@ class MovieResourceFilter
 
     /**
      * @param MovieFilterDefinition $filter
+     * @param null|string $count
      * @return QueryBuilder
      */
-    public function getQuery(MovieFilterDefinition $filter): QueryBuilder
+    public function getQuery(MovieFilterDefinition $filter, ?string $count = null): QueryBuilder
     {
         $qb = $this->movieRepository->createQueryBuilder('movie');
 
@@ -88,7 +89,7 @@ class MovieResourceFilter
             $qb->setParameter('timeTo', $filter->getTimeTo());
         }
 
-        if (null !== $filter->getSortByArray()) {
+        if (null !== $filter->getSortByArray() && $count === null) {
             foreach ($filter->getSortByArray() as $by => $order) {
                 $expr = 'desc' == $order
                     ? $qb->expr()->desc("movie.$by")
