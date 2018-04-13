@@ -4,8 +4,11 @@ namespace App\Resource\Filtering\Role;
 
 use App\Resource\Filtering\AbstractFilterDefinition;
 use App\Resource\Filtering\FilterDefinitionInterface;
+use App\Resource\Filtering\SortTableFilterDefinitionInterface;
 
-class RoleFilterDefinition extends AbstractFilterDefinition implements FilterDefinitionInterface
+class RoleFilterDefinition
+    extends AbstractFilterDefinition
+    implements FilterDefinitionInterface, SortTableFilterDefinitionInterface
 {
     /**
      * @var null|string
@@ -23,6 +26,11 @@ class RoleFilterDefinition extends AbstractFilterDefinition implements FilterDef
     private $sortByArray;
 
     /**
+     * @var int|null
+     */
+    private $movie;
+
+    /**
      * RoleFilterDefinition constructor.
      * @param null|string $playedName
      * @param int|null $movie
@@ -37,6 +45,7 @@ class RoleFilterDefinition extends AbstractFilterDefinition implements FilterDef
     )
     {
         $this->playedName = $playedName;
+        $this->movie = $movie;
         $this->sortBy = $sortByQuery;
         $this->sortByArray = $sortByArray;
     }
@@ -49,10 +58,19 @@ class RoleFilterDefinition extends AbstractFilterDefinition implements FilterDef
         return $this->playedName;
     }
 
+
+    /**
+     * @return int|null
+     */
+    public function getMovie(): ?int
+    {
+        return $this->movie;
+    }
+
     /**
      * @return null|string
      */
-    public function getSortBy(): ?string
+    public function getSortByQuery(): ?string
     {
         return $this->sortBy;
     }

@@ -2,9 +2,13 @@
 
 namespace App\Resource\Filtering\Movie;
 
+use App\Resource\Filtering\AbstractFilterDefinitionFactory;
+use App\Resource\Filtering\FilterDefinitionFactoryInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 class MovieFilterDefinitionFactory
+    extends AbstractFilterDefinitionFactory
+    implements FilterDefinitionFactoryInterface
 {
     private const KEY_TITLE = 'title';
     private const KEY_YEAR_FROM = 'yearFrom';
@@ -15,7 +19,10 @@ class MovieFilterDefinitionFactory
     private const KEY_SORT_BY_ARRAY = 'sortBy';
     private CONST ACCEPTED_SORT_FIELDS = ['id', 'title', 'year', 'time'];
 
-
+    /**
+     * @param Request $request
+     * @return MovieFilterDefinition
+     */
     public function factory(Request $request): MovieFilterDefinition
     {
         return new MovieFilterDefinition(
@@ -29,26 +36,11 @@ class MovieFilterDefinitionFactory
         );
     }
 
-    private function sortQueryToArray(?string $sortByQuery): ?array
+    /**
+     * @return array
+     */
+    public function getAcceptedSortField(): array
     {
-        if (null === $sortByQuery) {
-            return null;
-        }
-        return array_intersect_key(array_reduce(
-            explode(',', $sortByQuery),
-            function ($carry, $item) {
-                list($by, $order) = array_replace(
-                    [1 => 'desc'],
-                    explode(
-                        ' ',
-                        preg_replace('/\s+/', ' ', $item)
-                    )
-                );
-                $carry[$by] = $order;
-
-                return $carry;
-            },
-            []
-        ), array_flip(self::ACCEPTED_SORT_FIELDS));
+        return self::ACCEPTED_SORT_FIELDS;
     }
 }

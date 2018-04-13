@@ -3,9 +3,10 @@
 namespace App\Resource\Filtering\Movie;
 
 use App\Repository\MovieRepository;
+use App\Resource\Filtering\ResourceFilterInterface;
 use Doctrine\ORM\QueryBuilder;
 
-class MovieResourceFilter
+class MovieResourceFilter implements ResourceFilterInterface
 {
     /**
      * @var MovieRepository
