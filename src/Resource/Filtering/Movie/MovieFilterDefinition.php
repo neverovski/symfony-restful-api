@@ -4,6 +4,7 @@ namespace App\Resource\Filtering\Movie;
 
 class MovieFilterDefinition
 {
+    private const QUERY_PARAMS_BLACKLIST = ['sortByArray'];
     /**
      * @var null|string
      */
@@ -37,7 +38,7 @@ class MovieFilterDefinition
     /**
      * @var null|string
      */
-    private $sortByQuery;
+    private $sortBy;
 
     /**
      * MovieFilterDefinition constructor.
@@ -64,7 +65,7 @@ class MovieFilterDefinition
         $this->yearTo = $yearTo;
         $this->timeFrom = $timeFrom;
         $this->timeTo = $timeTo;
-        $this->sortByQuery = $sortByQuery;
+        $this->sortBy = $sortByQuery;
         $this->sortByArray = $sortByArray;
     }
 
@@ -113,7 +114,10 @@ class MovieFilterDefinition
      */
     public function getQueryParameters(): array
     {
-        return get_object_vars($this);
+        return array_diff_key(
+            get_object_vars($this),
+            array_flip(self::QUERY_PARAMS_BLACKLIST)
+        );
     }
 
     /**
@@ -129,7 +133,7 @@ class MovieFilterDefinition
      */
     public function getSortByQuery(): ?string
     {
-        return $this->sortByQuery;
+        return $this->sortBy;
     }
 
 }

@@ -88,7 +88,15 @@ class MovieResourceFilter
             $qb->setParameter('timeTo', $filter->getTimeTo());
         }
 
-        dump($filter); die;
+        if (null !== $filter->getSortByArray()) {
+            foreach ($filter->getSortByArray() as $by => $order) {
+                $expr = 'desc' == $order
+                    ? $qb->expr()->desc("movie.$by")
+                    : $qb->expr()->asc("movie.$by");
+                $qb->addOrderBy($expr);
+            }
+        }
+
         return $qb;
     }
 
