@@ -59,7 +59,7 @@ class Movie
 
     /**
      * @var ArrayCollection
-     * @ORM\OneToMany(targetEntity="Role", mappedBy="movie")
+     * @ORM\OneToMany(targetEntity="Role", mappedBy="movie", cascade={"remove"})
      * @Serializer\Exclude()
      */
     private $roles;

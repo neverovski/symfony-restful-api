@@ -1,0 +1,13 @@
+fos_http_cache:
+    cache_control:
+        defaults:
+            overwrite: false
+        rules:
+            # match everything to set defaults
+            -
+                match:
+                    path: ^/
+                headers:
+                    cache_control: { public: true, max_age: 60, s_maxage: 60 }
+                    vary: [X-Accept-Version, Accept-Encoding]
+                    etag: true

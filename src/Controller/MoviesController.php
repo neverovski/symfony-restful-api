@@ -10,7 +10,9 @@ use App\Resource\Filtering\Role\RoleFilterDefinitionFactory;
 use App\Resource\Pagination\Movie\MoviePagination;
 use App\Resource\Pagination\PageRequestFactory;
 use App\Resource\Pagination\Role\RolePagination;
+use FOS\HttpCacheBundle\Configuration\InvalidateRoute;
 use FOS\RestBundle\Controller\ControllerTrait;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use FOS\RestBundle\Controller\Annotations as Rest;
@@ -92,6 +94,8 @@ class MoviesController extends AbstractController
 
     /**
      * @Rest\View()
+     * @InvalidateRoute("get_movie", params={"movie" = {"expression" = "movie.getId()"}})
+     * @InvalidateRoute("get_movies")
      */
     public function deleteMovieAction(?Movie $movie)
     {
@@ -106,6 +110,7 @@ class MoviesController extends AbstractController
 
     /**
      * @Rest\View()
+     * @Cache(public=true, maxage=3600, smaxage=3600)
      */
     public function getMovieAction(?Movie $movie)
     {
