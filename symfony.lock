@@ -155,6 +155,15 @@
             "ref": "f95712101a2316e607a95ec54629e791fd3ee875"
         }
     },
+    "nelmio/cors-bundle": {
+        "version": "1.5",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "1.5",
+            "ref": "7b6cbc842f8cd3d550815247d12294f6f304a8c4"
+        }
+    },
     "nikic/php-parser": {
         "version": "v4.0.1"
     },
