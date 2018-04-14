@@ -11,6 +11,7 @@ use App\Resource\Pagination\Movie\MoviePagination;
 use App\Resource\Pagination\PageRequestFactory;
 use App\Resource\Pagination\Role\RolePagination;
 use FOS\HttpCacheBundle\Configuration\InvalidateRoute;
+use FOS\RestBundle\Controller\Annotations\Version;
 use FOS\RestBundle\Controller\ControllerTrait;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
@@ -23,6 +24,7 @@ use App\Exception\ValidationException;
 
 /**
  * @Security("is_anonymous() or is_authenticated()")
+ * @Version("v1")
  */
 class MoviesController extends AbstractController
 {
@@ -76,8 +78,8 @@ class MoviesController extends AbstractController
 
     /**
      * @Rest\View(statusCode=201)
+     * @Rest\Post("/movies")
      * @ParamConverter("movie", converter="fos_rest.request_body")
-     * @Rest\NoRoute()
      */
     public function postMoviesAction(Movie $movie, ConstraintViolationListInterface $validationErrors)
     {
@@ -166,7 +168,6 @@ class MoviesController extends AbstractController
      * @ParamConverter("modifiedMovie", converter="fos_rest.request_body",
      *     options={"validator" = {"groups" = {"Patch"}}}
      * )
-     * @Rest\NoRoute()
      * @Security("is_authenticated()")
      */
     public function patchMovieAction(?Movie $movie, Movie $modifiedMovie, ConstraintViolationListInterface $validationErrors)

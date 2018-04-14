@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Image;
 use App\Repository\ImageRepository;
+use FOS\RestBundle\Controller\Annotations\Version;
 use FOS\RestBundle\Controller\ControllerTrait;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
@@ -14,6 +15,11 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\UnsupportedMediaTypeHttpException;
 
+/**
+ * Class ImagesController
+ * @package App\Controller
+ * @Version("v1")
+ */
 class ImagesController extends AbstractController
 {
     use ControllerTrait;

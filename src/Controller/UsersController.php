@@ -6,6 +6,7 @@ use App\Security\TokenStorage;
 use App\Entity\EntityMerger;
 use App\Entity\User;
 use App\Exception\ValidationException;
+use FOS\RestBundle\Controller\Annotations\Version;
 use Lexik\Bundle\JWTAuthenticationBundle\Encoder\JWTEncoderInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -17,6 +18,7 @@ use FOS\RestBundle\Controller\Annotations as Rest;
 
 /**
  * @Security("is_anonymous() or is_authenticated()")
+ * @Version("v1")
  */
 class UsersController extends AbstractController
 {

@@ -15,9 +15,17 @@ fos_rest:
         exception_controller: 'App\Controller\ExceptionController::showAction'
     serializer:
         groups: ['Default']
+    versioning:
+        enabled: true
+        default_version: v1
+        resolvers:
+            query:
+                enabled: true
+                parameter_name: version
     format_listener:
-            rules:
-                - { path: ^/, prefer_extension: true, fallback_format: json, priorities: [ json ] }
+        enabled: true
+        rules:
+            - { path: ^/, prefer_extension: true, fallback_format: json, priorities: [ json ] }
 #    exception:
 #        codes:
 #            App\Exception\MyException: 403

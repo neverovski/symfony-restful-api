@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Security\TokenStorage;
+use FOS\RestBundle\Controller\Annotations\Version;
 use FOS\RestBundle\Controller\ControllerTrait;
 use Lexik\Bundle\JWTAuthenticationBundle\Encoder\JWTEncoderInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -15,6 +16,7 @@ use Symfony\Component\Security\Core\Exception\BadCredentialsException;
 
 /**
  * @Security("is_anonymous() or is_authenticated()")
+ * @Version("v1")
  */
 class TokensController extends AbstractController
 {

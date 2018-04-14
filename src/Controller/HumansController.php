@@ -6,6 +6,7 @@ use App\Entity\Person;
 use App\Resource\Filtering\Person\PersonFilterDefinitionFactory;
 use App\Resource\Pagination\PageRequestFactory;
 use App\Resource\Pagination\Person\PersonPagination;
+use FOS\RestBundle\Controller\Annotations\Version;
 use FOS\RestBundle\Controller\ControllerTrait;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -14,6 +15,10 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 use App\Exception\ValidationException;
 
+/**
+ * Class HumansController
+ * @Version("v1")
+ */
 class HumansController extends AbstractController
 {
     use ControllerTrait;
@@ -48,8 +53,8 @@ class HumansController extends AbstractController
 
     /**
      * @Rest\View(statusCode=201)
+     * @Rest\Post("/humans")
      * @ParamConverter("person", converter="fos_rest.request_body")
-     * @Rest\NoRoute()
      */
     public function postHumansAction(Person $person, ConstraintViolationListInterface $validationErrors)
     {

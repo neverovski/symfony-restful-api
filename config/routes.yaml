@@ -4,35 +4,16 @@
 
 movies:
     type: rest
+    prefix: /api/v1
     resource: App\Controller\MoviesController
-
-movies_post:
-    path: /movies
-    methods: [POST]
-    defaults:
-        _controller: App\Controller\MoviesController:postMoviesAction
-        _format: json
-
-movies_patch:
-    path: /movies/{movie}
-    methods: [PATCH]
-    defaults:
-        _controller: App\Controller\MoviesController:patchMovieAction
-        _format: json
 
 humans:
     type: rest
+    prefix: /api/v1
     resource: App\Controller\HumansController
 
-humans_post:
-    path: /humans
-    methods: [POST]
-    defaults:
-        _controller: App\Controller\HumansController:postHumansAction
-        _format: json
-
 movies_roles_post:
-    path: /movies/{movie}/roles
+    path: /api/v1/movies/{movie}/roles
     methods: [POST]
     defaults:
         _controller: App\Controller\MoviesController:postMovieRolesAction
@@ -40,17 +21,18 @@ movies_roles_post:
 
 user:
     resource: App\Controller\UsersController
+    prefix: /api/v1
     type: rest
 
 users_post:
-    path: /users
+    path: /api/v1/users
     methods: [POST]
     defaults:
         _controller: App\Controller\UsersController:postUserAction
         _format: json
 
 users_patch:
-    path: /users/{theUser}
+    path: /api/v1/users/{theUser}
     methods: [PATCH]
     defaults:
         _controller: App\Controller\UsersController:patchUserAction
@@ -58,27 +40,29 @@ users_patch:
 
 tokens:
     resource: App\Controller\TokensController
+    prefix: /api/v1
     type: rest
 
 images:
     resource: App\Controller\ImagesController
+    prefix: /api/v1
     type: rest
 
 images_post:
-    path: /images
+    path: /api/v1/images
     methods: [POST]
     defaults:
         _controller: App\Controller\ImagesController:postImagesAction
         _format: json
 
 images_upload_put:
-    path: /images/{image}/upload
+    path: /api/v1/images/{image}/upload
     methods: [PUT]
     defaults:
         _controller: App\Controller\ImagesController:putImageUploadAction
         _format: json
 
 app.swagger_ui:
-    path: /api/doc
+    path: /api/v1/doc
     methods: GET
     defaults: { _controller: nelmio_api_doc.controller.swagger_ui }
