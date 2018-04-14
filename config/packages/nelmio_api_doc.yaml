@@ -1,19 +1,11 @@
 nelmio_api_doc:
     documentation:
-        host: 127.0.0.1
-        schemes: [http]
         info:
-            title: My App
-            description: This is an awesome app!
+            title: "Movies API"
+            description: "Movies database API"
             version: 1.0.0
-        securityDefinitions:
-            Bearer:
-                type: apiKey
-                description: 'Value: Bearer {jwt}'
-                name: Authorization
-                in: header
-        security:
-            - Bearer: []
-    areas:
-        path_patterns: # an array of regexps
+    routes:
+        path_patterns:
             - ^/api/v1(?!/doc$)
+    models:
+        use_jms: true

@@ -13,6 +13,7 @@ use App\Resource\Pagination\Role\RolePagination;
 use FOS\HttpCacheBundle\Configuration\InvalidateRoute;
 use FOS\RestBundle\Controller\Annotations\Version;
 use FOS\RestBundle\Controller\ControllerTrait;
+use Nelmio\ApiDocBundle\Annotation\Model;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -21,6 +22,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 use App\Exception\ValidationException;
+use Swagger\Annotations as SWG;
 
 /**
  * @Security("is_anonymous() or is_authenticated()")
@@ -98,6 +100,15 @@ class MoviesController extends AbstractController
      * @Rest\View()
      * @InvalidateRoute("get_movie", params={"movie" = {"expression" = "movie.getId()"}})
      * @InvalidateRoute("get_movies")
+     * @SWG\Get(
+     *     tags={"Movie"},
+     *     summary="Gets the movie",
+     *     consumes={"application/json"},
+     *     produces={"application/json"},
+     *     @SWG\Parameter(name="movie", in="path", type="integer", description="Movie id", required=true),
+     *     @SWG\Response(response="200", description="Returned when successful", @SWG\Schema(type="array", @Model(type=Movie::class))),
+     *     @SWG\Response(response="404", description="Returned when movie is not found")
+     * )
      */
     public function deleteMovieAction(?Movie $movie)
     {
