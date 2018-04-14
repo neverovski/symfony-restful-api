@@ -8,12 +8,14 @@ use App\Resource\Pagination\PageRequestFactory;
 use App\Resource\Pagination\Person\PersonPagination;
 use FOS\RestBundle\Controller\Annotations\Version;
 use FOS\RestBundle\Controller\ControllerTrait;
+use Nelmio\ApiDocBundle\Annotation\Model;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 use App\Exception\ValidationException;
+use Swagger\Annotations as SWG;
 
 /**
  * Class HumansController
@@ -39,6 +41,15 @@ class HumansController extends AbstractController
 
     /**
      * @Rest\View()
+     *
+     * @SWG\Get(
+     *     tags={"Person"},
+     *     summary="Gets the all person",
+     *     consumes={"application/json"},
+     *     produces={"application/json"},
+     *     @SWG\Response(response="200", description="Returned when successful", @SWG\Schema(type="array", @Model(type=Person::class))),
+     *     @SWG\Response(response="404", description="Returned when movie is not found")
+     * )
      */
     public function getHumansAction(Request $request)
     {
@@ -55,6 +66,18 @@ class HumansController extends AbstractController
      * @Rest\View(statusCode=201)
      * @Rest\Post("/humans")
      * @ParamConverter("person", converter="fos_rest.request_body")
+     *
+     * @SWG\Post(
+     *     tags={"Person"},
+     *     summary="Add a new person resource",
+     *     consumes={"application/json"},
+     *     produces={"application/json"},
+     *     @SWG\Parameter(name="body", in="body", required=true, @SWG\Schema(type="array", @Model(type=Person::class))),
+     *     @SWG\Response(response="201", description="Returned when resource created", @SWG\Schema(type="array", @Model(type=Person::class))),
+     *     @SWG\Response(response="400", description="Returned when invalid date posted"),
+     *     @SWG\Response(response="401", description="Returned when not authenticated"),
+     *     @SWG\Response(response="403", description="Returned when token is invalid or expired")
+     * )
      */
     public function postHumansAction(Person $person, ConstraintViolationListInterface $validationErrors)
     {
@@ -71,6 +94,16 @@ class HumansController extends AbstractController
 
     /**
      * @Rest\View()
+     *
+     * @SWG\Delete(
+     *     tags={"Person"},
+     *     summary="Delete the person",
+     *     consumes={"application/json"},
+     *     produces={"application/json"},
+     *     @SWG\Parameter(name="person", in="path", type="integer", description="Person id", required=true),
+     *     @SWG\Response(response="200", description="Returned when successful", @SWG\Schema(type="array", @Model(type=Person::class))),
+     *     @SWG\Response(response="404", description="Returned when movie is not found")
+     * )
      */
     public function deleteHumanAction(?Person $person)
     {
@@ -85,6 +118,16 @@ class HumansController extends AbstractController
 
     /**
      * @Rest\View()
+     *
+     * @SWG\Get(
+     *     tags={"Person"},
+     *     summary="Gets the person",
+     *     consumes={"application/json"},
+     *     produces={"application/json"},
+     *     @SWG\Parameter(name="person", in="path", type="integer", description="Person id", required=true),
+     *     @SWG\Response(response="200", description="Returned when successful", @SWG\Schema(type="array", @Model(type=Person::class))),
+     *     @SWG\Response(response="404", description="Returned when movie is not found")
+     * )
      */
     public function getHumanAction(?Person $person)
     {

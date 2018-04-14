@@ -66,6 +66,15 @@ class MoviesController extends AbstractController
 
     /**
      * @Rest\View()
+     *
+     * @SWG\Get(
+     *     tags={"Movie"},
+     *     summary="Gets the all movie",
+     *     consumes={"application/json"},
+     *     produces={"application/json"},
+     *     @SWG\Response(response="200", description="Returned when successful", @SWG\Schema(type="array", @Model(type=Movie::class))),
+     *     @SWG\Response(response="404", description="Returned when movie is not found")
+     * )
      */
     public function getMoviesAction(Request $request)
     {
@@ -82,6 +91,18 @@ class MoviesController extends AbstractController
      * @Rest\View(statusCode=201)
      * @Rest\Post("/movies")
      * @ParamConverter("movie", converter="fos_rest.request_body")
+     *
+     * @SWG\Post(
+     *     tags={"Movie"},
+     *     summary="Add a new movie resource",
+     *     consumes={"application/json"},
+     *     produces={"application/json"},
+     *     @SWG\Parameter(name="body", in="body", required=true, @SWG\Schema(type="array", @Model(type=Movie::class))),
+     *     @SWG\Response(response="201", description="Returned when resource created", @SWG\Schema(type="array", @Model(type=Movie::class))),
+     *     @SWG\Response(response="400", description="Returned when invalid date posted"),
+     *     @SWG\Response(response="401", description="Returned when not authenticated"),
+     *     @SWG\Response(response="403", description="Returned when token is invalid or expired")
+     * )
      */
     public function postMoviesAction(Movie $movie, ConstraintViolationListInterface $validationErrors)
     {
@@ -100,9 +121,10 @@ class MoviesController extends AbstractController
      * @Rest\View()
      * @InvalidateRoute("get_movie", params={"movie" = {"expression" = "movie.getId()"}})
      * @InvalidateRoute("get_movies")
-     * @SWG\Get(
+     *
+     * @SWG\Delete(
      *     tags={"Movie"},
-     *     summary="Gets the movie",
+     *     summary="Delete the movie",
      *     consumes={"application/json"},
      *     produces={"application/json"},
      *     @SWG\Parameter(name="movie", in="path", type="integer", description="Movie id", required=true),
@@ -124,6 +146,16 @@ class MoviesController extends AbstractController
     /**
      * @Rest\View()
      * @Cache(public=true, maxage=3600, smaxage=3600)
+     *
+     * @SWG\Get(
+     *     tags={"Movie"},
+     *     summary="Gets the movie",
+     *     consumes={"application/json"},
+     *     produces={"application/json"},
+     *     @SWG\Parameter(name="movie", in="path", type="integer", description="Movie id", required=true),
+     *     @SWG\Response(response="200", description="Returned when successful", @SWG\Schema(type="array", @Model(type=Movie::class))),
+     *     @SWG\Response(response="404", description="Returned when movie is not found")
+     * )
      */
     public function getMovieAction(?Movie $movie)
     {
@@ -180,6 +212,17 @@ class MoviesController extends AbstractController
      *     options={"validator" = {"groups" = {"Patch"}}}
      * )
      * @Security("is_authenticated()")
+     *
+     * @SWG\Patch(
+     *     tags={"Movie"},
+     *     summary="Edit the movie",
+     *     consumes={"application/json"},
+     *     produces={"application/json"},
+     *     @SWG\Response(response="201", description="Returned when resource update", @SWG\Schema(type="array", @Model(type=Movie::class))),
+     *     @SWG\Response(response="400", description="Returned when invalid date posted"),
+     *     @SWG\Response(response="401", description="Returned when not authenticated"),
+     *     @SWG\Response(response="403", description="Returned when token is invalid or expired")
+     * )
      */
     public function patchMovieAction(?Movie $movie, Movie $modifiedMovie, ConstraintViolationListInterface $validationErrors)
     {
