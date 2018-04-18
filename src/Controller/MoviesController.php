@@ -13,7 +13,6 @@ use App\Resource\Pagination\Role\RolePagination;
 use FOS\HttpCacheBundle\Configuration\InvalidateRoute;
 use FOS\RestBundle\Controller\Annotations\Version;
 use FOS\RestBundle\Controller\ControllerTrait;
-use Nelmio\ApiDocBundle\Annotation\Model;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -72,7 +71,7 @@ class MoviesController extends AbstractController
      *     summary="Gets the all movie",
      *     consumes={"application/json"},
      *     produces={"application/json"},
-     *     @SWG\Response(response="200", description="Returned when successful", @SWG\Schema(type="array", @Model(type=Movie::class))),
+     *     @SWG\Response(response="200", description="Returned when successful"),
      *     @SWG\Response(response="404", description="Returned when movie is not found")
      * )
      *
@@ -99,8 +98,7 @@ class MoviesController extends AbstractController
      *     summary="Add a new movie resource",
      *     consumes={"application/json"},
      *     produces={"application/json"},
-     *     @SWG\Parameter(name="body", in="body", required=true, @SWG\Schema(type="array", @Model(type=Movie::class))),
-     *     @SWG\Response(response="201", description="Returned when resource created", @SWG\Schema(type="array", @Model(type=Movie::class))),
+     *     @SWG\Response(response="201", description="Returned when resource created"),
      *     @SWG\Response(response="400", description="Returned when invalid date posted"),
      *     @SWG\Response(response="401", description="Returned when not authenticated"),
      *     @SWG\Response(response="403", description="Returned when token is invalid or expired")
@@ -133,8 +131,7 @@ class MoviesController extends AbstractController
      *     summary="Delete the movie",
      *     consumes={"application/json"},
      *     produces={"application/json"},
-     *     @SWG\Parameter(name="movie", in="path", type="integer", description="Movie id", required=true),
-     *     @SWG\Response(response="200", description="Returned when successful", @SWG\Schema(type="array", @Model(type=Movie::class))),
+     *     @SWG\Response(response="200", description="Returned when successful"),
      *     @SWG\Response(response="404", description="Returned when movie is not found")
      * )
      *
@@ -161,8 +158,7 @@ class MoviesController extends AbstractController
      *     summary="Gets the movie",
      *     consumes={"application/json"},
      *     produces={"application/json"},
-     *     @SWG\Parameter(name="movie", in="path", type="integer", description="Movie id", required=true),
-     *     @SWG\Response(response="200", description="Returned when successful", @SWG\Schema(type="array", @Model(type=Movie::class))),
+     *     @SWG\Response(response="200", description="Returned when successful"),
      *     @SWG\Response(response="404", description="Returned when movie is not found")
      * )
      *
@@ -240,7 +236,7 @@ class MoviesController extends AbstractController
      *     summary="Edit the movie",
      *     consumes={"application/json"},
      *     produces={"application/json"},
-     *     @SWG\Response(response="201", description="Returned when resource update", @SWG\Schema(type="array", @Model(type=Movie::class))),
+     *     @SWG\Response(response="201", description="Returned when resource update"),
      *     @SWG\Response(response="400", description="Returned when invalid date posted"),
      *     @SWG\Response(response="401", description="Returned when not authenticated"),
      *     @SWG\Response(response="403", description="Returned when token is invalid or expired")

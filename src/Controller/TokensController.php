@@ -13,6 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use Symfony\Component\Security\Core\Exception\BadCredentialsException;
+use Swagger\Annotations as SWG;
 
 /**
  * @Security("is_anonymous() or is_authenticated()")
@@ -56,6 +57,14 @@ class TokensController extends AbstractController
     /**
      * @Rest\View(statusCode=201)
      * @Rest\Post("/tokens", name="post_token")
+     * @SWG\Post(
+     *     tags={"User"},
+     *     summary="Add a new token",
+     *     consumes={"application/json"},
+     *     produces={"application/json"},
+     *     @SWG\Response(response="200", description="Returned when successful"),
+     *     @SWG\Response(response="404", description="Returned when movie is not found")
+     * )
      *
      * @param Request $request
      * @return JsonResponse

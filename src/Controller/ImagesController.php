@@ -11,9 +11,11 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\MimeType\ExtensionGuesser;
 use Symfony\Component\HttpFoundation\Request;
+use Nelmio\ApiDocBundle\Annotation\Model;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\UnsupportedMediaTypeHttpException;
+use Swagger\Annotations as SWG;
 
 /**
  * Class ImagesController
@@ -55,20 +57,40 @@ class ImagesController extends AbstractController
 
     /**
      * @Rest\View()
+     * @Rest\Get("/images", name="get_images")
+     * @SWG\Get(
+     *     tags={"Image"},
+     *     summary="Gets the all image",
+     *     consumes={"application/json"},
+     *     produces={"application/json"},
+     *     @SWG\Response(response="200", description="Returned when successful")
+     * )
      */
-    public function getImagesAction()
+    public function getImages()
     {
         return $this->imageRepository->findAll();
     }
+
     /**
+     * @Rest\View(statusCode=201)
+     * @Rest\Post("/images", name="post_images")
      * @ParamConverter(
      *     "image",
      *     converter="fos_rest.request_body",
      *     options={"deserializationContext"={"groups"={"Deserialize"}}}
      * )
-     * @Rest\NoRoute()
+     * @SWG\Post(
+     *     tags={"Image"},
+     *     summary="Add a new image resource",
+     *     consumes={"application/json"},
+     *     produces={"application/json"},
+     *     @SWG\Response(response="201", description="Returned when resource created"),
+     * )
+     *
+     * @param Image $image
+     * @return \FOS\RestBundle\View\View
      */
-    public function postImagesAction(Image $image)
+    public function postImages(Image $image)
     {
         $this->persistImage($image);
 
@@ -82,9 +104,22 @@ class ImagesController extends AbstractController
     }
 
     /**
-     * @Rest\NoRoute()
+     * @Rest\View()
+     * @Rest\Put("/images/{image}/upload", name="put_image_upload")
+     * @SWG\Put(
+     *     tags={"Image"},
+     *     summary="Edit the image",
+     *     consumes={"application/json"},
+     *     produces={"application/json"},
+     *     @SWG\Response(response="200", description="Returned when resource update"),
+     *     @SWG\Response(response="400", description="Returned when invalid date posted")
+     * )
+     *
+     * @param Image|null $image
+     * @param Request $request
+     * @return Response
      */
-    public function putImageUploadAction(?Image $image, Request $request)
+    public function putImageUpload(?Image $image, Request $request)
     {
         if (null === $image) {
             throw new NotFoundHttpException();
@@ -113,12 +148,12 @@ class ImagesController extends AbstractController
         // Guess the extension based on mime-type
         $extensionGuesser = ExtensionGuesser::getInstance();
         // Generate a new random filename
-        $newFileName = md5(uniqid()).'.'.$extensionGuesser->guess($mimeType);
+        $newFileName = md5(uniqid()) . '.' . $extensionGuesser->guess($mimeType);
 
         // Copy the temp file to the final uploads directory
-        copy($tmpFilePatch, $this->imageDirectory.DIRECTORY_SEPARATOR.$newFileName);
+        copy($tmpFilePatch, $this->imageDirectory . DIRECTORY_SEPARATOR . $newFileName);
 
-        $image->setUrl($this->imageBaseUrl.$newFileName);
+        $image->setUrl($this->imageBaseUrl . $newFileName);
 
         $this->persistImage($image);
 

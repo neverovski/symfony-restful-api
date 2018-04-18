@@ -41,17 +41,20 @@ class PersonsController extends AbstractController
 
     /**
      * @Rest\View()
-     *
+     * @Rest\Get("/persons", name="get_persons")
      * @SWG\Get(
      *     tags={"Person"},
      *     summary="Gets the all person",
      *     consumes={"application/json"},
      *     produces={"application/json"},
-     *     @SWG\Response(response="200", description="Returned when successful", @SWG\Schema(type="array", @Model(type=Person::class))),
+     *     @SWG\Response(response="200", description="Returned when successful"),
      *     @SWG\Response(response="404", description="Returned when movie is not found")
      * )
+     *
+     * @param Request $request
+     * @return \Hateoas\Representation\PaginatedRepresentation
      */
-    public function getHumansAction(Request $request)
+    public function getPersons(Request $request)
     {
         $pageRequestFactory = new PageRequestFactory();
         $page = $pageRequestFactory->fromRequest($request);
@@ -64,22 +67,22 @@ class PersonsController extends AbstractController
 
     /**
      * @Rest\View(statusCode=201)
-     * @Rest\Post("/humans")
+     * @Rest\Post("/persons", name="post_persons")
      * @ParamConverter("person", converter="fos_rest.request_body")
-     *
      * @SWG\Post(
      *     tags={"Person"},
      *     summary="Add a new person resource",
      *     consumes={"application/json"},
      *     produces={"application/json"},
-     *     @SWG\Parameter(name="body", in="body", required=true, @SWG\Schema(type="array", @Model(type=Person::class))),
-     *     @SWG\Response(response="201", description="Returned when resource created", @SWG\Schema(type="array", @Model(type=Person::class))),
-     *     @SWG\Response(response="400", description="Returned when invalid date posted"),
-     *     @SWG\Response(response="401", description="Returned when not authenticated"),
-     *     @SWG\Response(response="403", description="Returned when token is invalid or expired")
+     *     @SWG\Response(response="200", description="Returned when successful"),
+     *     @SWG\Response(response="404", description="Returned when movie is not found")
      * )
+     *
+     * @param Person $person
+     * @param ConstraintViolationListInterface $validationErrors
+     * @return Person
      */
-    public function postHumansAction(Person $person, ConstraintViolationListInterface $validationErrors)
+    public function postPersons(Person $person, ConstraintViolationListInterface $validationErrors)
     {
         if (count($validationErrors) > 0) {
             throw new ValidationException($validationErrors);
@@ -94,18 +97,20 @@ class PersonsController extends AbstractController
 
     /**
      * @Rest\View()
-     *
+     * @Rest\Delete("/persons/{person}", name="delete_person")
      * @SWG\Delete(
      *     tags={"Person"},
      *     summary="Delete the person",
      *     consumes={"application/json"},
      *     produces={"application/json"},
-     *     @SWG\Parameter(name="person", in="path", type="integer", description="Person id", required=true),
-     *     @SWG\Response(response="200", description="Returned when successful", @SWG\Schema(type="array", @Model(type=Person::class))),
+     *     @SWG\Response(response="200", description="Returned when successful"),
      *     @SWG\Response(response="404", description="Returned when movie is not found")
      * )
+     *
+     * @param Person|null $person
+     * @return \FOS\RestBundle\View\View
      */
-    public function deleteHumanAction(?Person $person)
+    public function deletePerson(?Person $person)
     {
         if (null === $person) {
             return $this->view(null, 404);
@@ -118,18 +123,20 @@ class PersonsController extends AbstractController
 
     /**
      * @Rest\View()
-     *
+     * @Rest\Get("/persons/{person}", name="get_person")
      * @SWG\Get(
      *     tags={"Person"},
      *     summary="Gets the person",
      *     consumes={"application/json"},
      *     produces={"application/json"},
-     *     @SWG\Parameter(name="person", in="path", type="integer", description="Person id", required=true),
-     *     @SWG\Response(response="200", description="Returned when successful", @SWG\Schema(type="array", @Model(type=Person::class))),
+     *     @SWG\Response(response="200", description="Returned when successful"),
      *     @SWG\Response(response="404", description="Returned when movie is not found")
      * )
+     *
+     * @param Person|null $person
+     * @return Person|\FOS\RestBundle\View\View|null
      */
-    public function getHumanAction(?Person $person)
+    public function getPeron(?Person $person)
     {
         if (null === $person) {
             return $this->view(null, 404);

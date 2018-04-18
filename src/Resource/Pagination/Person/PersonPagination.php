@@ -11,7 +11,7 @@ class PersonPagination
     extends AbstractPagination
     implements PaginationInterface
 {
-    private const ROUTE = 'get_humans';
+    private const ROUTE = 'get_persons';
 
     /**
      * @var PersonResourceFilter

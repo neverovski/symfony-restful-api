@@ -8,6 +8,7 @@ use App\Entity\User;
 use App\Exception\ValidationException;
 use FOS\RestBundle\Controller\Annotations\Version;
 use Lexik\Bundle\JWTAuthenticationBundle\Encoder\JWTEncoderInterface;
+use Nelmio\ApiDocBundle\Annotation\Model;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -15,6 +16,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 use FOS\RestBundle\Controller\Annotations as Rest;
+use Swagger\Annotations as SWG;
 
 /**
  * @Security("is_anonymous() or is_authenticated()")
@@ -62,9 +64,21 @@ class UsersController extends AbstractController
 
     /**
      * @Rest\View()
+     * @Rest\Get("/users/{theUser}", name="get_user")
      * @Security("is_granted('show', theUser)", message="Access denied")
+     * @SWG\Get(
+     *     tags={"User"},
+     *     summary="Get the user",
+     *     consumes={"application/json"},
+     *     produces={"application/json"},
+     *     @SWG\Response(response="200", description="Returned when successful"),
+     *     @SWG\Response(response="404", description="Returned when movie is not found")
+     * )
+     *
+     * @param User|null $theUser
+     * @return User|null
      */
-    public function getUserAction(?User $theUser)
+    public function getUsers(?User $theUser)
     {
         if (null === $theUser) {
             throw new NotFoundHttpException();
@@ -75,14 +89,26 @@ class UsersController extends AbstractController
 
     /**
      * @Rest\View(statusCode=201)
+     * @Rest\Post("/users", name="post_user")
      * @ParamConverter(
      *     "user",
      *     converter="fos_rest.request_body",
      *     options={"deserializationContext"={"groups"={"Deserialize"}}}
      * )
-     * @Rest\NoRoute()
+     * @SWG\Post(
+     *     tags={"User"},
+     *     summary="Add a new user resource",
+     *     consumes={"application/json"},
+     *     produces={"application/json"},
+     *     @SWG\Response(response="200", description="Returned when successful"),
+     *     @SWG\Response(response="404", description="Returned when movie is not found")
+     * )
+     *
+     * @param User $user
+     * @param ConstraintViolationListInterface $validationErrors
+     * @return User
      */
-    public function postUserAction(User $user, ConstraintViolationListInterface $validationErrors)
+    public function postUser(User $user, ConstraintViolationListInterface $validationErrors)
     {
         if (count($validationErrors) > 0) {
             throw new ValidationException($validationErrors);
@@ -97,7 +123,7 @@ class UsersController extends AbstractController
 
     /**
      * @Rest\View()
-     * @Rest\NoRoute()
+     * @Rest\Put("/users/{theUser}", name="put_user")
      * @ParamConverter(
      *     "modifiedUser",
      *     converter="fos_rest.request_body",
@@ -107,8 +133,21 @@ class UsersController extends AbstractController
      *     }
      * )
      * @Security("is_granted('edit', theUser)", message="Access denied")
+     * @SWG\Put(
+     *     tags={"User"},
+     *     summary="Edit the user",
+     *     consumes={"application/json"},
+     *     produces={"application/json"},
+     *     @SWG\Response(response="200", description="Returned when successful"),
+     *     @SWG\Response(response="404", description="Returned when movie is not found")
+     * )
+     *
+     * @param User|null $theUser
+     * @param User $modifiedUser
+     * @param ConstraintViolationListInterface $validationErrors
+     * @return User|null
      */
-    public function putUserAction(?User $theUser, User $modifiedUser, ConstraintViolationListInterface $validationErrors)
+    public function putUser(?User $theUser, User $modifiedUser, ConstraintViolationListInterface $validationErrors)
     {
         if (null === $theUser) {
             throw new NotFoundHttpException();

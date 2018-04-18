@@ -17,20 +17,6 @@ user:
     resource: App\Controller\UsersController
     type: rest
 
-users_post:
-    path: /api/users
-    methods: [POST]
-    defaults:
-        _controller: App\Controller\UsersController:postUserAction
-        _format: json
-
-users_patch:
-    path: /api/users/{theUser}
-    methods: [PUT]
-    defaults:
-        _controller: App\Controller\UsersController:patchUserAction
-        _format: json
-
 tokens:
     resource: App\Controller\TokensController
     type: rest
@@ -38,20 +24,6 @@ tokens:
 images:
     resource: App\Controller\ImagesController
     type: rest
-
-images_post:
-    path: /api/images
-    methods: [POST]
-    defaults:
-        _controller: App\Controller\ImagesController:postImagesAction
-        _format: json
-
-images_upload_put:
-    path: /api/images/{image}/upload
-    methods: [PUT]
-    defaults:
-        _controller: App\Controller\ImagesController:putImageUploadAction
-        _format: json
 
 app.swagger_ui:
     path: /api/doc
