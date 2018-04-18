@@ -27,7 +27,6 @@ use Swagger\Annotations as SWG;
 /**
  * @Security("is_anonymous() or is_authenticated()")
  * @Version("v1")
- * @Rest\Route("/api")
  */
 class MoviesController extends AbstractController
 {
@@ -106,7 +105,7 @@ class MoviesController extends AbstractController
      *     @SWG\Response(response="401", description="Returned when not authenticated"),
      *     @SWG\Response(response="403", description="Returned when token is invalid or expired")
      * )
-     * 
+     *
      * @param Movie $movie
      * @param ConstraintViolationListInterface $validationErrors
      * @return Movie

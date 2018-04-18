@@ -55,8 +55,13 @@ class TokensController extends AbstractController
 
     /**
      * @Rest\View(statusCode=201)
+     * @Rest\Post("/tokens", name="post_token")
+     *
+     * @param Request $request
+     * @return JsonResponse
+     * @throws \Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTEncodeFailureException
      */
-    public function postTokenAction(Request $request)
+    public function postToken(Request $request)
     {
         $user = $this->getDoctrine()->getRepository('App:User')->findOneBy(['username' => $request->getUser()]);
         if (!$user) {

@@ -1,6 +1,9 @@
 #index:
 #    path: /
 #    controller: App\Controller\DefaultController::index
+api:
+    prefix: /api
+    resource: '../src/Controller'
 
 movies:
     type: rest
@@ -8,12 +11,10 @@ movies:
 
 persons:
     type: rest
-    prefix: /api
     resource: App\Controller\PersonsController
 
 user:
     resource: App\Controller\UsersController
-    prefix: /api
     type: rest
 
 users_post:
@@ -32,12 +33,10 @@ users_patch:
 
 tokens:
     resource: App\Controller\TokensController
-    prefix: /api
     type: rest
 
 images:
     resource: App\Controller\ImagesController
-    prefix: /api/
     type: rest
 
 images_post:
