@@ -4,65 +4,57 @@
 
 movies:
     type: rest
-    prefix: /api/v1
     resource: App\Controller\MoviesController
 
-humans:
+persons:
     type: rest
-    prefix: /api/v1
-    resource: App\Controller\HumansController
-
-movies_roles_post:
-    path: /api/v1/movies/{movie}/roles
-    methods: [POST]
-    defaults:
-        _controller: App\Controller\MoviesController:postMovieRolesAction
-        _format: json
+    prefix: /api
+    resource: App\Controller\PersonsController
 
 user:
     resource: App\Controller\UsersController
-    prefix: /api/v1
+    prefix: /api
     type: rest
 
 users_post:
-    path: /api/v1/users
+    path: /api/users
     methods: [POST]
     defaults:
         _controller: App\Controller\UsersController:postUserAction
         _format: json
 
 users_patch:
-    path: /api/v1/users/{theUser}
-    methods: [PATCH]
+    path: /api/users/{theUser}
+    methods: [PUT]
     defaults:
         _controller: App\Controller\UsersController:patchUserAction
         _format: json
 
 tokens:
     resource: App\Controller\TokensController
-    prefix: /api/v1
+    prefix: /api
     type: rest
 
 images:
     resource: App\Controller\ImagesController
-    prefix: /api/v1
+    prefix: /api/
     type: rest
 
 images_post:
-    path: /api/v1/images
+    path: /api/images
     methods: [POST]
     defaults:
         _controller: App\Controller\ImagesController:postImagesAction
         _format: json
 
 images_upload_put:
-    path: /api/v1/images/{image}/upload
+    path: /api/images/{image}/upload
     methods: [PUT]
     defaults:
         _controller: App\Controller\ImagesController:putImageUploadAction
         _format: json
 
 app.swagger_ui:
-    path: /api/v1/doc
+    path: /api/doc
     methods: GET
     defaults: { _controller: nelmio_api_doc.controller.swagger_ui }

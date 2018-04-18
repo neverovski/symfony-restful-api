@@ -6,6 +6,6 @@ nelmio_api_doc:
             version: 1.0.0
     routes:
         path_patterns:
-            - ^/api/v1(?!/doc$)
+            - ^/api(?!/doc$)
     models:
         use_jms: true

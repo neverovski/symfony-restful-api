@@ -27,6 +27,7 @@ use Swagger\Annotations as SWG;
 /**
  * @Security("is_anonymous() or is_authenticated()")
  * @Version("v1")
+ * @Rest\Route("/api")
  */
 class MoviesController extends AbstractController
 {
@@ -66,7 +67,7 @@ class MoviesController extends AbstractController
 
     /**
      * @Rest\View()
-     *
+     * @Rest\Get("/movies", name="get_movies")
      * @SWG\Get(
      *     tags={"Movie"},
      *     summary="Gets the all movie",
@@ -75,8 +76,11 @@ class MoviesController extends AbstractController
      *     @SWG\Response(response="200", description="Returned when successful", @SWG\Schema(type="array", @Model(type=Movie::class))),
      *     @SWG\Response(response="404", description="Returned when movie is not found")
      * )
+     *
+     * @param Request $request
+     * @return \Hateoas\Representation\PaginatedRepresentation
      */
-    public function getMoviesAction(Request $request)
+    public function getMovies(Request $request)
     {
         $pageRequestFactory = new PageRequestFactory();
         $page = $pageRequestFactory->fromRequest($request);
@@ -89,9 +93,8 @@ class MoviesController extends AbstractController
 
     /**
      * @Rest\View(statusCode=201)
-     * @Rest\Post("/movies")
-     * @ParamConverter("movie", converter="fos_rest.request_body")
-     *
+     * @Rest\Post("/movies", name="post_movies")
+     * @ParamConverter("movie", converter="fos_rest.request_body")     *
      * @SWG\Post(
      *     tags={"Movie"},
      *     summary="Add a new movie resource",
@@ -103,8 +106,12 @@ class MoviesController extends AbstractController
      *     @SWG\Response(response="401", description="Returned when not authenticated"),
      *     @SWG\Response(response="403", description="Returned when token is invalid or expired")
      * )
+     * 
+     * @param Movie $movie
+     * @param ConstraintViolationListInterface $validationErrors
+     * @return Movie
      */
-    public function postMoviesAction(Movie $movie, ConstraintViolationListInterface $validationErrors)
+    public function postMovies(Movie $movie, ConstraintViolationListInterface $validationErrors)
     {
         if (count($validationErrors) > 0) {
             throw new ValidationException($validationErrors);
@@ -121,7 +128,7 @@ class MoviesController extends AbstractController
      * @Rest\View()
      * @InvalidateRoute("get_movie", params={"movie" = {"expression" = "movie.getId()"}})
      * @InvalidateRoute("get_movies")
-     *
+     * @Rest\Delete("/movies/{movie}", name="delete_movie")
      * @SWG\Delete(
      *     tags={"Movie"},
      *     summary="Delete the movie",
@@ -131,8 +138,11 @@ class MoviesController extends AbstractController
      *     @SWG\Response(response="200", description="Returned when successful", @SWG\Schema(type="array", @Model(type=Movie::class))),
      *     @SWG\Response(response="404", description="Returned when movie is not found")
      * )
+     *
+     * @param Movie|null $movie
+     * @return \FOS\RestBundle\View\View
      */
-    public function deleteMovieAction(?Movie $movie)
+    public function deleteMovie(?Movie $movie)
     {
         if (null === $movie) {
             return $this->view(null, 404);
@@ -145,8 +155,8 @@ class MoviesController extends AbstractController
 
     /**
      * @Rest\View()
+     * @Rest\Get("/movies/{movie}", name="get_movie")
      * @Cache(public=true, maxage=3600, smaxage=3600)
-     *
      * @SWG\Get(
      *     tags={"Movie"},
      *     summary="Gets the movie",
@@ -156,8 +166,11 @@ class MoviesController extends AbstractController
      *     @SWG\Response(response="200", description="Returned when successful", @SWG\Schema(type="array", @Model(type=Movie::class))),
      *     @SWG\Response(response="404", description="Returned when movie is not found")
      * )
+     *
+     * @param Movie|null $movie
+     * @return Movie|\FOS\RestBundle\View\View|null
      */
-    public function getMovieAction(?Movie $movie)
+    public function getMovie(?Movie $movie)
     {
         if (null === $movie) {
             return $this->view(null, 404);
@@ -168,8 +181,13 @@ class MoviesController extends AbstractController
 
     /**
      * @Rest\View()
+     * @Rest\Get("/movies/{movie}/roles", name="get_movie_roles")
+     *
+     * @param Request $request
+     * @param Movie $movie
+     * @return \Hateoas\Representation\PaginatedRepresentation
      */
-    public function getMovieRolesAction(Request $request, Movie $movie)
+    public function getMovieRoles(Request $request, Movie $movie)
     {
         $pageRequestFactory = new PageRequestFactory();
         $page = $pageRequestFactory->fromRequest($request);
@@ -185,10 +203,15 @@ class MoviesController extends AbstractController
 
     /**
      * @Rest\View(statusCode=201)
+     * @Rest\Post("/movies/{movie}/roles", name="post_movie_roles")
      * @ParamConverter("role", converter="fos_rest.request_body", options={"deserializationContext"={"groups"={"Deserialize"}}})
-     * @Rest\NoRoute()
+     *
+     * @param Movie $movie
+     * @param Role $role
+     * @param ConstraintViolationListInterface $validationErrors
+     * @return Role
      */
-    public function postMovieRolesAction(Movie $movie, Role $role, ConstraintViolationListInterface $validationErrors)
+    public function postMovieRoles(Movie $movie, Role $role, ConstraintViolationListInterface $validationErrors)
     {
         if (count($validationErrors) > 0) {
             throw new ValidationException($validationErrors);
@@ -208,12 +231,12 @@ class MoviesController extends AbstractController
 
     /**
      * @Rest\View()
+     * @Rest\Put("/movies/{movie}", name="put_movie")
      * @ParamConverter("modifiedMovie", converter="fos_rest.request_body",
      *     options={"validator" = {"groups" = {"Patch"}}}
      * )
      * @Security("is_authenticated()")
-     *
-     * @SWG\Patch(
+     * @SWG\Put(
      *     tags={"Movie"},
      *     summary="Edit the movie",
      *     consumes={"application/json"},
@@ -223,8 +246,13 @@ class MoviesController extends AbstractController
      *     @SWG\Response(response="401", description="Returned when not authenticated"),
      *     @SWG\Response(response="403", description="Returned when token is invalid or expired")
      * )
+     *
+     * @param Movie|null $movie
+     * @param Movie $modifiedMovie
+     * @param ConstraintViolationListInterface $validationErrors
+     * @return Movie|\FOS\RestBundle\View\View|null
      */
-    public function patchMovieAction(?Movie $movie, Movie $modifiedMovie, ConstraintViolationListInterface $validationErrors)
+    public function putMovie(?Movie $movie, Movie $modifiedMovie, ConstraintViolationListInterface $validationErrors)
     {
         if (null === $movie) {
             return $this->view(null, 404);

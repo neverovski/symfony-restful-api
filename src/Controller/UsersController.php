@@ -108,7 +108,7 @@ class UsersController extends AbstractController
      * )
      * @Security("is_granted('edit', theUser)", message="Access denied")
      */
-    public function patchUserAction(?User $theUser, User $modifiedUser, ConstraintViolationListInterface $validationErrors)
+    public function putUserAction(?User $theUser, User $modifiedUser, ConstraintViolationListInterface $validationErrors)
     {
         if (null === $theUser) {
             throw new NotFoundHttpException();

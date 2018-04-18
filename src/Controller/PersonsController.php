@@ -21,7 +21,7 @@ use Swagger\Annotations as SWG;
  * Class HumansController
  * @Version("v1")
  */
-class HumansController extends AbstractController
+class PersonsController extends AbstractController
 {
     use ControllerTrait;
 
