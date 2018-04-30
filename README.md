@@ -1,6 +1,9 @@
 # Rest Api Symfony Application
 ========================
 
+Test verison:
+<a href="http://movie.neverovski.com/api/doc">http://movie.neverovski.com/api/doc</a>
+
 Requirements
 ------------
 
