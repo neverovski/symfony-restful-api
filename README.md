@@ -8,6 +8,7 @@ Requirements
 
   * PHP 7.1.3 or higher;
   * PDO-pgSQL PHP extension enabled;
+  * Redis;
   * and the [usual Symfony application requirements][1].
 
 Installation
